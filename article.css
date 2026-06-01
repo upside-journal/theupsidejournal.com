@@ -1,0 +1,299 @@
+/* ═══════════════════════════════════════════════════════════
+   UPSIDE JOURNAL — Article page styles
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Breadcrumb ─── */
+.breadcrumb {
+    padding: 14px 0;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    border-bottom: 1px solid var(--border-light);
+}
+.breadcrumb a {
+    color: var(--ink-3);
+    transition: color 0.2s;
+}
+.breadcrumb a:hover { color: var(--accent-dark); }
+.breadcrumb-sep { margin: 0 6px; opacity: 0.4; }
+.breadcrumb-current { color: var(--ink-muted); }
+
+/* ─── Article Container ─── */
+.article-container {
+    padding: 48px 0 64px;
+}
+
+/* ─── Article Header ─── */
+.article-header {
+    max-width: 720px;
+    margin: 0 auto 36px;
+}
+
+.article-header .column-tag {
+    margin-bottom: 16px;
+}
+
+.article-title {
+    font-family: var(--serif);
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1.12;
+    margin-bottom: 18px;
+    color: var(--ink);
+}
+
+.article-subtitle {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+    margin-bottom: 28px;
+    font-weight: 400;
+}
+
+.article-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.author-avatar.large {
+    width: 52px;
+    height: 52px;
+    font-size: 1rem;
+}
+
+.author-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+    display: block;
+    color: var(--ink);
+}
+.author-name:hover { text-decoration: underline; }
+
+.author-role {
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+}
+
+.meta-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+}
+
+/* ─── Cover Image ─── */
+.article-cover {
+    max-width: 860px;
+    margin: 0 auto 40px;
+}
+
+.article-cover img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+}
+
+.article-cover figcaption {
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    margin-top: 8px;
+    text-align: center;
+    font-style: italic;
+}
+
+/* ─── Article Body ─── */
+.article-body {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.article-body p {
+    font-size: 1.08rem;
+    line-height: 1.78;
+    color: var(--ink-2);
+    margin-bottom: 22px;
+}
+
+.article-body .article-lede {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.65;
+    color: var(--ink);
+    margin-bottom: 24px;
+}
+
+.article-body h2 {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 40px 0 18px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-light);
+    line-height: 1.25;
+}
+
+.article-body h2:first-of-type {
+    margin-top: 32px;
+}
+
+.article-body strong {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.article-body a {
+    color: var(--accent-dark);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+}
+.article-body a:hover { color: var(--accent); }
+
+.article-pullquote {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--ink);
+    text-align: center;
+    margin: 40px 0;
+    padding: 28px 40px;
+    border-top: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+}
+
+/* ─── Author Bio ─── */
+.author-bio {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 28px;
+    margin: 48px 0 24px;
+    background: var(--warm-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+.author-bio p {
+    font-size: 0.92rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 0 !important;
+    color: var(--ink-2);
+}
+
+.author-bio strong { color: var(--ink); }
+
+/* ─── Tags ─── */
+.article-tags {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.tag {
+    display: inline-block;
+    padding: 5px 14px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent-tag);
+    background: var(--accent-soft);
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+}
+
+/* ─── Related Articles ─── */
+.related-section {
+    max-width: 680px;
+    margin: 40px auto 0;
+}
+
+.related-section h3 {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.related-card {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: border-color 0.2s, background 0.2s;
+    display: block;
+    text-decoration: none;
+}
+.related-card:hover { border-color: var(--accent); background: var(--cream); }
+
+.related-card h4 {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    color: var(--ink);
+}
+
+.related-card p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .article-title { font-size: 1.8rem; }
+    .article-subtitle { font-size: 1rem; }
+    .article-body p { font-size: 1rem; }
+    .article-body .article-lede { font-size: 1.1rem; }
+    .article-body h2 { font-size: 1.3rem; }
+    .article-pullquote { font-size: 1.2rem; padding: 20px 24px; }
+    .article-meta { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .related-grid { grid-template-columns: 1fr; }
+    .article-cover { margin-bottom: 28px; }
+    .author-bio { flex-direction: column; padding: 20px; }
+}
+
+@media (max-width: 480px) {
+    .article-title { font-size: 1.5rem; }
+    .article-header { margin-bottom: 24px; }
+}

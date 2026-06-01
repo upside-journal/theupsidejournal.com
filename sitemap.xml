@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+  <url>
+    <loc>https://theupsidejournal.com/</loc>
+    <lastmod>2026-06-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/cannes-3b-networking-failure.html</loc>
+    <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-30</news:publication_date>
+      <news:title>Cannes Lions Is a $3 Billion Networking Failure — Here's the Data</news:title>
+    </news:news>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/300-billion-quarter.html</loc>
+    <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-29</news:publication_date>
+      <news:title>$300 Billion in One Quarter — Where Smart Capital Is Actually Going in 2026</news:title>
+    </news:news>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/ai-regulation-playbook.html</loc>
+    <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-28</news:publication_date>
+      <news:title>Washington's AI Regulation Playbook — What Every Tech Founder Needs to Know</news:title>
+    </news:news>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/enterprise-ai-stack.html</loc>
+    <lastmod>2026-05-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-27</news:publication_date>
+      <news:title>The Enterprise AI Stack Nobody Is Talking About — What Cannes Brands Are Missing</news:title>
+    </news:news>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/opportunity-africa.html</loc>
+    <lastmod>2026-05-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-25</news:publication_date>
+      <news:title>Opportunity Africa — The Day We Stop Asking for Permission to Tell Our Own Story</news:title>
+    </news:news>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/eritrea-independence-day.html</loc>
+    <lastmod>2026-05-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-05-24</news:publication_date>
+      <news:title>35 Years of Eritrea — Why Every African Independence Story Is My Story Too</news:title>
+    </news:news>
+  </url>
+</urlset>

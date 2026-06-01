@@ -1,0 +1,4 @@
+# Netlify redirects
+# theupsidejournal.com -> theupsidejournal.com
+https://theupsidejournal.com/* https://theupsidejournal.com/:splat 301!
+http://theupsidejournal.com/* https://theupsidejournal.com/:splat 301!
