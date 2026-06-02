@@ -3,9 +3,23 @@
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
   <url>
     <loc>https://theupsidejournal.com/</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/messi-cannes-lions.html</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-02</news:publication_date>
+      <news:title>There Is No Lionel Messi of Cannes Lions</news:title>
+    </news:news>
   </url>
   <url>
     <loc>https://theupsidejournal.com/articles/cannes-3b-networking-failure.html</loc>
@@ -19,6 +33,20 @@
       </news:publication>
       <news:publication_date>2026-05-30</news:publication_date>
       <news:title>Cannes Lions Is a $3 Billion Networking Failure — Here's the Data</news:title>
+    </news:news>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/saas-churn-metric.html</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-02</news:publication_date>
+      <news:title>The SaaS Churn Metric Nobody Measures — And Why It Matters More Than ARR</news:title>
     </news:news>
   </url>
   <url>
@@ -90,5 +118,29 @@
       <news:publication_date>2026-05-24</news:publication_date>
       <news:title>35 Years of Eritrea — Why Every African Independence Story Is My Story Too</news:title>
     </news:news>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/microsoft-event-roi-playbook.html</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/eu-ai-act-vs-us-executive-order.html</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/africa-hidden-unicorns.html</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/un-summits-deal-rooms.html</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
