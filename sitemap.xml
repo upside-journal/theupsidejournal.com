@@ -8,6 +8,20 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://theupsidejournal.com/articles/cannes-un-reform-reality-gap.html</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-02</news:publication_date>
+      <news:title>From Cannes Trophies to UN Reform: Why the World's Best Storytellers Still Can't Solve the Reality Gap</news:title>
+    </news:news>
+  </url>
+  <url>
     <loc>https://theupsidejournal.com/articles/messi-cannes-lions.html</loc>
     <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>
