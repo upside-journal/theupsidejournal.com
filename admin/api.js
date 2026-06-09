@@ -13,46 +13,42 @@ const API = {
         localStorage.setItem(`mc_${key}`, value);
     },
 
-    // Generic fetch
+    // Generic fetch for CF Pages Functions
     async _fetch(endpoint, options = {}) {
         const url = `${CONFIG.apiBase}${endpoint}`;
-        try {
-            const res = await fetch(url, {
-                headers: { 'Content-Type': 'application/json', ...options.headers },
-                ...options,
-            });
-            if (!res.ok) throw new Error(`API ${res.status}`);
-            return await res.json();
-        } catch (e) {
-            // CF Pages Functions not available — caller should handle fallback
-            throw e;
-        }
+        const res = await fetch(url, {
+            headers: { 'Content-Type': 'application/json', ...options.headers },
+            ...options,
+        });
+        if (!res.ok) throw new Error(`API ${res.status}`);
+        return await res.json();
     },
 
-    // ─── GitHub (direct API — works with CORS) ───
+    // ─── GitHub (direct API — works with CORS on public repos) ───
     github: {
         async _gh(endpoint) {
             const token = API._getToken('github');
             const headers = {
                 'Accept': 'application/vnd.github.v3+json',
-                'User-Agent': 'UpsideJournal-MissionControl',
             };
             if (token) headers['Authorization'] = `token ${token}`;
 
-            const res = await fetch(`https://api.github.com/repos/${CONFIG.github.owner}/${CONFIG.github.repo}${endpoint}`, { headers });
+            const res = await fetch(
+                `https://api.github.com/repos/${CONFIG.github.owner}/${CONFIG.github.repo}${endpoint}`,
+                { headers }
+            );
             if (!res.ok) throw new Error(`GitHub API ${res.status}`);
             return res.json();
         },
 
         async listArticles() {
-            try { return await API._fetch('/github/articles'); }
-            catch { return this._gh(`/contents/${CONFIG.github.articlesDir}?ref=${CONFIG.github.branch}`); }
+            // Skip CF Functions, go direct to GitHub API (public repo = no auth needed)
+            return API.github._gh(`/contents/${CONFIG.github.articlesDir}?ref=${CONFIG.github.branch}`);
         },
 
         async getFile(path, ref) {
             ref = ref || CONFIG.github.branch;
-            try { return await API._fetch(`/github/file?path=${encodeURIComponent(path)}&ref=${ref}`); }
-            catch { return this._gh(`/contents/${path}?ref=${ref}`); }
+            return API.github._gh(`/contents/${path}?ref=${ref}`);
         },
 
         async commitFile(path, content, message) {
@@ -62,17 +58,17 @@ const API = {
                     method: 'POST',
                     body: JSON.stringify({ path, content, message }),
                 });
-            } catch {
-                // Direct GitHub API commit
+            } catch (e) {
+                // Direct GitHub API commit (requires token)
                 const token = API._getToken('github');
                 if (!token) throw new Error('GitHub token required — go to Ops Center → API Vault to configure');
 
                 // Get current SHA
                 let sha = null;
                 try {
-                    const existing = await this._gh(`/contents/${path}?ref=${CONFIG.github.branch}`);
+                    const existing = await API.github._gh(`/contents/${path}?ref=${CONFIG.github.branch}`);
                     sha = existing.sha;
-                } catch {}
+                } catch (err) { /* new file */ }
 
                 const body = { message: message || `Update ${path}`, content, branch: CONFIG.github.branch };
                 if (sha) body.sha = sha;
@@ -95,11 +91,11 @@ const API = {
         },
 
         async listBranches() {
-            return this._gh('/branches');
+            return API.github._gh('/branches');
         },
 
         async listDrafts() {
-            return this.listArticles();
+            return API.github.listArticles();
         },
     },
 
@@ -111,8 +107,8 @@ const API = {
                     method: 'POST',
                     body: JSON.stringify({ urls }),
                 });
-            } catch {
-                throw new Error('Cache purge requires CF Pages Functions or Cloudflare API token');
+            } catch (e) {
+                throw new Error('Cache purge requires CF Pages deployment — see Ops Center');
             }
         },
     },
@@ -135,7 +131,7 @@ const API = {
         async checkUrl(url) {
             try {
                 return await API._fetch(`/seo/check?url=${encodeURIComponent(url)}`);
-            } catch {
+            } catch (e) {
                 // Will fall back to client-side parsing in the SEO module
                 throw new Error('SEO proxy not available — using client-side check');
             }
