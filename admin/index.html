@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control — Upside Journal</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/admin/styles.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">UJ</div>
+            <div class="brand-text">
+                <span class="brand-title">MISSION CONTROL</span>
+                <span class="brand-sub">theupsidejournal.com</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav" id="sidebarNav">
+            <a href="#/dashboard" class="nav-item active" data-route="dashboard">
+                <span class="nav-icon">◉</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <div class="nav-section">CONTENT</div>
+            <a href="#/publisher" class="nav-item" data-route="publisher">
+                <span class="nav-icon">✎</span>
+                <span class="nav-label">Publisher</span>
+                <span class="nav-badge" id="draftCount">—</span>
+            </a>
+            <a href="#/seo" class="nav-item" data-route="seo">
+                <span class="nav-icon">◎</span>
+                <span class="nav-label">SEO / GEO</span>
+            </a>
+            <div class="nav-section">INTELLIGENCE</div>
+            <a href="#/analytics" class="nav-item" data-route="analytics">
+                <span class="nav-icon">▤</span>
+                <span class="nav-label">Analytics</span>
+            </a>
+            <a href="#/assets" class="nav-item" data-route="assets">
+                <span class="nav-icon">⊞</span>
+                <span class="nav-label">Asset Catalog</span>
+            </a>
+            <div class="nav-section">OPERATIONS</div>
+            <a href="#/operations" class="nav-item" data-route="operations">
+                <span class="nav-icon">⚙</span>
+                <span class="nav-label">Ops Center</span>
+            </a>
+            <a href="#/syndication" class="nav-item" data-route="syndication">
+                <span class="nav-icon">⇄</span>
+                <span class="nav-label">Syndication</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="system-status" id="systemStatus">
+                <span class="status-dot online"></span>
+                <span class="status-text">All systems nominal</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">☰</button>
+            <div class="topbar-breadcrumb" id="breadcrumb">Dashboard</div>
+            <div class="topbar-actions">
+                <button class="btn-icon" id="btnRefresh" title="Refresh data">↻</button>
+                <button class="btn-icon" id="btnCachePurge" title="Purge edge cache">⚡</button>
+                <div class="topbar-user">
+                    <span class="user-avatar">O</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Container -->
+        <div class="page-container" id="pageContainer">
+            <!-- Content loaded dynamically by router -->
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="/admin/config.js"></script>
+    <script src="/admin/api.js"></script>
+    <script src="/admin/components.js"></script>
+    <script src="/admin/modules/dashboard.js"></script>
+    <script src="/admin/modules/publisher.js"></script>
+    <script src="/admin/modules/seo.js"></script>
+    <script src="/admin/modules/analytics.js"></script>
+    <script src="/admin/modules/operations.js"></script>
+    <script src="/admin/modules/assets.js"></script>
+    <script src="/admin/modules/syndication.js"></script>
+    <script src="/admin/app.js"></script>
+</body>
+</html>
