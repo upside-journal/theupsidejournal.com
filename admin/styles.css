@@ -847,3 +847,150 @@ select.form-input { appearance: auto; }
     .queue-item { flex-direction: column; }
     .queue-item-actions { align-self: flex-start; }
 }
+
+/* ═══════════════════════════════════════════
+   SESSION 2 — WYSIWYG Editor Toggle Styles
+   ═══════════════════════════════════════════ */
+
+/* Visual ↔ Code mode toggle */
+.editor-mode-toggle {
+    display: flex;
+    background: var(--slate-100);
+    border-radius: 6px;
+    padding: 2px;
+    gap: 2px;
+    margin-right: 8px;
+}
+.mode-btn {
+    padding: 5px 14px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: var(--slate-600);
+    font-family: var(--sans);
+    transition: all 0.15s;
+}
+.mode-btn.active {
+    background: #fff;
+    color: var(--slate-900);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.mode-btn:hover:not(.active) {
+    color: var(--slate-900);
+}
+
+/* Quill editor overrides to match portal design */
+.ql-toolbar.ql-snow {
+    border: 1px solid var(--slate-200) !important;
+    border-radius: var(--radius) var(--radius) 0 0 !important;
+    background: var(--slate-50);
+    font-family: var(--sans) !important;
+}
+.ql-container.ql-snow {
+    border: 1px solid var(--slate-200) !important;
+    border-top: none !important;
+    border-radius: 0 0 var(--radius) var(--radius) !important;
+    font-family: var(--sans) !important;
+    font-size: 15px;
+    line-height: 1.7;
+}
+.ql-editor {
+    min-height: 400px;
+    padding: 24px;
+}
+.ql-editor h1 { font-family: var(--display); font-size: 28px; }
+.ql-editor h2 { font-family: var(--display); font-size: 22px; }
+.ql-editor h3 { font-family: var(--display); font-size: 18px; }
+.ql-editor blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 16px;
+    color: var(--slate-600);
+}
+.ql-snow .ql-picker-label { font-family: var(--sans); }
+
+/* Cache purge log animation */
+#purgeLogContent div {
+    animation: fadeInLog 0.3s ease;
+}
+@keyframes fadeInLog {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════
+   AUTH GATE — Login Screen
+   ═══════════════════════════════════════════ */
+.login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--slate-900) 0%, #1a1f2e 50%, var(--slate-800) 100%);
+    padding: 20px;
+}
+.login-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05);
+    max-width: 400px;
+    width: 100%;
+    overflow: hidden;
+}
+.login-brand {
+    text-align: center;
+    padding: 40px 32px 24px;
+    background: var(--slate-900);
+    color: #fff;
+}
+.login-logo {
+    width: 56px;
+    height: 56px;
+    background: var(--accent);
+    color: var(--slate-900);
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+.login-title {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin: 0 0 4px;
+}
+.login-sub {
+    font-size: 13px;
+    color: var(--slate-400);
+    margin: 0;
+    font-family: var(--mono);
+}
+.login-form {
+    padding: 32px;
+}
+.login-form .form-input {
+    padding: 12px 14px;
+    font-size: 14px;
+}
+.login-error {
+    color: #dc2626;
+    font-size: 13px;
+    margin: -8px 0 16px;
+    padding: 8px 12px;
+    background: #fef2f2;
+    border-radius: var(--radius);
+}
+.login-footer {
+    text-align: center;
+    padding: 16px 32px 24px;
+    font-size: 11px;
+    color: var(--slate-400);
+}

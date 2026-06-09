@@ -1,11 +1,13 @@
 /* ═══════════════════════════════════════════════════
-   OPERATIONS DASHBOARD
+   OPERATIONS DASHBOARD  (v3 — Session 2)
    Cron controller, Slack pods, token vault, cache purge
+   Now with live Cloudflare cache purge
    ═══════════════════════════════════════════════════ */
 
 const OperationsModule = {
     activeTab: 'cron',
     cronPaused: false,
+    cfVerified: null,  // null = not checked, true/false
 
     // Slack workflow pods
     pods: [
@@ -18,12 +20,12 @@ const OperationsModule = {
 
     // Token registry
     tokens: [
-        { service: 'Buffer (Social A)', channels: 'LinkedIn · Instagram · X', masked: '0MjS••••ySzj', expiry: '—', status: 'active' },
-        { service: 'Buffer (Social B)', channels: 'TikTok · Facebook · YouTube', masked: 'sHCp••••c5Ak', expiry: '—', status: 'active' },
-        { service: 'GitHub', channels: 'Repo access', masked: 'ghp_••••SKtc', expiry: 'Aug 2026', status: 'active' },
-        { service: 'Cloudflare', channels: 'Zone management', masked: 'Not configured', expiry: '—', status: 'pending' },
-        { service: 'GA4', channels: 'Analytics read', masked: 'Acc: 395631476', expiry: '—', status: 'active' },
-        { service: 'AdSense', channels: 'Revenue data', masked: 'pub-598••6955', expiry: '—', status: 'active' },
+        { service: 'Buffer (Social A)', channels: 'LinkedIn · Instagram · X', key: 'buffer_a', masked: '0MjS••••ySzj', expiry: '—', status: 'active' },
+        { service: 'Buffer (Social B)', channels: 'TikTok · Facebook · YouTube', key: 'buffer_b', masked: 'sHCp••••c5Ak', expiry: '—', status: 'active' },
+        { service: 'GitHub', channels: 'Repo access', key: 'github', masked: 'ghp_••••SKtc', expiry: 'Aug 2026', status: 'active' },
+        { service: 'Cloudflare', channels: 'Zone management · Cache purge', key: 'cloudflare', masked: 'cfut_••••5f59', expiry: '—', status: 'active' },
+        { service: 'GA4', channels: 'Analytics read', key: 'ga4', masked: 'Acc: 395631476', expiry: '—', status: 'active' },
+        { service: 'AdSense', channels: 'Revenue data', key: 'adsense', masked: 'pub-598••6955', expiry: '—', status: 'active' },
     ],
 
     async render() {
@@ -188,70 +190,118 @@ const OperationsModule = {
                     <button class="btn btn-secondary btn-sm" onclick="OperationsModule.refreshTokens()">↻ Check Status</button>
                 </div>
                 <div class="card-body" style="padding:0">
-                    ${this.tokens.map(t => `
+                    ${this.tokens.map(t => {
+                        const stored = t.key ? API._getToken(t.key) : null;
+                        const displayStatus = stored ? 'active' : t.status;
+                        return `
                         <div class="token-row">
                             <div class="token-service">${t.service}</div>
                             <div style="flex:1">
-                                <div class="token-masked">${t.masked}</div>
+                                <div class="token-masked">${stored ? t.masked : 'Not stored locally'}</div>
                                 <div style="font-size:11px;color:var(--slate-400);margin-top:2px">${t.channels}</div>
                             </div>
                             <div class="token-expiry">${t.expiry}</div>
                             <div>
-                                ${t.status === 'active'
+                                ${displayStatus === 'active'
                                     ? UI.badge('Active', 'green')
-                                    : t.status === 'pending'
+                                    : displayStatus === 'pending'
                                     ? UI.badge('Pending', 'amber')
-                                    : UI.badge('Expired', 'red')}
+                                    : UI.badge('Not Set', 'slate')}
                             </div>
-                            <button class="btn btn-ghost btn-xs" onclick="OperationsModule.rotateToken('${t.service}')">Rotate</button>
-                        </div>
-                    `).join('')}
+                            ${t.key ? `<button class="btn btn-ghost btn-xs" onclick="OperationsModule.setTokenPrompt('${t.key}', '${t.service}')">
+                                ${stored ? 'Rotate' : 'Set'}
+                            </button>` : ''}
+                        </div>`;
+                    }).join('')}
                 </div>
                 <div class="card-footer">
                     <div style="font-size:12px;color:var(--slate-500)">
-                        ⚠ Token rotation updates the Cloudflare Pages environment variable. The new token takes effect on next deployment.
+                        🔒 Tokens are stored in your browser's localStorage only — never transmitted to any third-party server.
                     </div>
                 </div>
             </div>`;
     },
 
-    rotateToken(service) {
-        UI.toast(`Token rotation for ${service} — update the env variable in Cloudflare Pages dashboard`, 'warning');
+    setTokenPrompt(key, label) {
+        const val = prompt(`Enter API token for ${label}:`);
+        if (val && val.trim()) {
+            API.setToken(key, val.trim());
+            UI.toast(`${label} token saved ✓`, 'success');
+            this._renderTab();
+        }
     },
 
-    refreshTokens() {
-        UI.toast('Token status refreshed', 'success');
+    async refreshTokens() {
+        // Verify Cloudflare token if set
+        const cfToken = API._getToken('cloudflare');
+        if (cfToken) {
+            try {
+                const result = await API.cloudflare.verifyToken();
+                if (result.success) {
+                    this.cfVerified = true;
+                    UI.toast('Cloudflare token verified ✓', 'success');
+                }
+            } catch (e) {
+                this.cfVerified = false;
+                UI.toast('Cloudflare token invalid', 'error');
+            }
+        }
+
+        // Check GitHub token
+        const ghToken = API._getToken('github');
+        if (ghToken) {
+            UI.toast('GitHub token present ✓', 'success');
+        }
+
+        this._renderTab();
     },
 
-    // ─── Edge Cache ───
+    // ─── Edge Cache (live Cloudflare API) ───
     _cacheView() {
+        const hasCfToken = !!API._getToken('cloudflare');
+
         return `
             <div class="card mt-16">
                 <div class="card-header">
                     <span class="card-title">Cloudflare Edge Cache Management</span>
+                    ${hasCfToken ? UI.badge('Connected', 'green') : UI.badge('Token Required', 'amber')}
                 </div>
                 <div class="card-body">
                     <div class="stats-grid" style="margin-bottom:20px">
-                        ${UI.statCard('CDN', 'Cloudflare Pages')}
+                        ${UI.statCard('CDN', 'Cloudflare')}
+                        ${UI.statCard('ZONE', 'theupsidejournal.com')}
                         ${UI.statCard('EDGE LOCATIONS', '300+')}
                         ${UI.statCard('SSL', 'Active (auto)')}
                     </div>
+
+                    ${!hasCfToken ? `
+                        <div style="padding:16px;background:var(--amber-50, #fffbeb);border:1px solid var(--amber-200, #fde68a);border-radius:var(--radius);margin-bottom:20px">
+                            <strong>⚠ Cloudflare API token not set.</strong><br>
+                            <span style="font-size:13px">Go to <strong>API Vault</strong> tab → Set the Cloudflare token to enable live cache purge.</span>
+                        </div>
+                    ` : ''}
 
                     <div style="margin-bottom:20px">
                         <div class="form-label">Purge Specific URLs</div>
                         <div style="display:flex;gap:8px">
                             <input type="text" class="form-input" id="purgeUrls"
                                 placeholder="https://theupsidejournal.com/articles/... (comma-separated for multiple)">
-                            <button class="btn btn-secondary" onclick="OperationsModule.purgeSpecific()" style="flex-shrink:0">
+                            <button class="btn btn-secondary" onclick="OperationsModule.purgeSpecific()" style="flex-shrink:0" ${!hasCfToken ? 'disabled' : ''}>
                                 Purge URLs
                             </button>
                         </div>
                     </div>
 
-                    <div style="display:flex;gap:8px">
-                        <button class="btn btn-danger" onclick="OperationsModule.purgeAll()">
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <button class="btn btn-danger" onclick="OperationsModule.purgeAll()" ${!hasCfToken ? 'disabled' : ''}>
                             ⚡ Purge Everything
                         </button>
+                        <span style="font-size:12px;color:var(--slate-500)">Clears all cached assets across 300+ edge nodes globally</span>
+                    </div>
+
+                    <div id="purgeLog" style="margin-top:20px;display:none">
+                        <div style="font-family:var(--mono);font-size:12px;background:var(--slate-900);color:var(--green);padding:16px;border-radius:var(--radius);max-height:150px;overflow-y:auto;line-height:1.8" id="purgeLogContent">
+                        </div>
                     </div>
 
                     <div style="margin-top:20px;padding:12px;background:var(--slate-50);border-radius:var(--radius);font-size:12px;color:var(--slate-500)">
@@ -262,13 +312,27 @@ const OperationsModule = {
             </div>`;
     },
 
+    _logPurge(msg) {
+        const log = document.getElementById('purgeLog');
+        const content = document.getElementById('purgeLogContent');
+        if (log && content) {
+            log.style.display = 'block';
+            const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            content.innerHTML += `<div>[${time}] ${msg}</div>`;
+        }
+    },
+
     async purgeAll() {
+        if (!confirm('Purge entire edge cache globally? This may briefly increase origin load.')) return;
         try {
+            this._logPurge('Purging entire edge cache...');
             UI.toast('Purging entire edge cache...', 'warning');
             await API.cloudflare.purgeCache();
+            this._logPurge('✓ Edge cache purged globally');
             UI.toast('Edge cache purged globally ✓', 'success');
         } catch (e) {
-            UI.toast('Requires Cloudflare API token — add CF_API_TOKEN env variable', 'error');
+            this._logPurge('✗ Purge failed: ' + e.message);
+            UI.toast('Purge failed: ' + e.message, 'error');
         }
     },
 
@@ -277,11 +341,15 @@ const OperationsModule = {
         if (!input) return;
         const urls = input.split(',').map(u => u.trim()).filter(Boolean);
         try {
+            this._logPurge(`Purging ${urls.length} URL(s): ${urls.join(', ')}`);
             UI.toast(`Purging ${urls.length} URL(s)...`, 'warning');
             await API.cloudflare.purgeCache(urls);
+            this._logPurge(`✓ ${urls.length} URL(s) purged`);
             UI.toast(`${urls.length} URL(s) purged ✓`, 'success');
+            document.getElementById('purgeUrls').value = '';
         } catch (e) {
-            UI.toast('Requires Cloudflare API token', 'error');
+            this._logPurge('✗ Purge failed: ' + e.message);
+            UI.toast('Purge failed: ' + e.message, 'error');
         }
     },
 };

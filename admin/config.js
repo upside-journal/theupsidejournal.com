@@ -5,6 +5,13 @@
    ═══════════════════════════════════════════════════ */
 
 const CONFIG = {
+    // Auth gate — SHA-256 of admin password
+    // Default password: 'UpsideAdmin2026!' — change by updating hash
+    auth: {
+        passwordHash: '227a3ab58128d3a55cbccf92a3aee174f48d48394857298bfe97fbbe11472749',
+        sessionKey: 'mc_auth_session',
+    },
+
     // GitHub
     github: {
         owner: 'upside-journal',
@@ -46,6 +53,11 @@ const CONFIG = {
             { day: 'Saturday',  theme: 'Spotlight Saturday' },
             { day: 'Sunday',    theme: 'Super Sunday' },
         ],
+    },
+
+    // Cloudflare
+    cloudflare: {
+        zoneId: '2b8805ea14c607732041deacdf0c61a2',
     },
 
     // API proxy prefix (CF Pages Functions)

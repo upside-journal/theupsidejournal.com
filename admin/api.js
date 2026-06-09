@@ -1,11 +1,11 @@
 /* ═══════════════════════════════════════════════════
-   MISSION CONTROL — API Layer
+   MISSION CONTROL — API Layer  (v3 — Session 2)
    Hybrid mode: tries CF Pages Functions first, then
    falls back to direct API calls for GitHub Pages hosting.
    ═══════════════════════════════════════════════════ */
 
 const API = {
-    // Token management — stored in localStorage for GitHub Pages mode
+    // Token management — stored in localStorage
     _getToken(key) {
         return localStorage.getItem(`mc_${key}`) || null;
     },
@@ -42,7 +42,6 @@ const API = {
         },
 
         async listArticles() {
-            // Skip CF Functions, go direct to GitHub API (public repo = no auth needed)
             return API.github._gh(`/contents/${CONFIG.github.articlesDir}?ref=${CONFIG.github.branch}`);
         },
 
@@ -63,7 +62,6 @@ const API = {
                 const token = API._getToken('github');
                 if (!token) throw new Error('GitHub token required — go to Ops Center → API Vault to configure');
 
-                // Get current SHA
                 let sha = null;
                 try {
                     const existing = await API.github._gh(`/contents/${path}?ref=${CONFIG.github.branch}`);
@@ -99,17 +97,48 @@ const API = {
         },
     },
 
-    // ─── Cloudflare ───
+    // ─── Cloudflare (direct API — uses token from localStorage) ───
     cloudflare: {
-        async purgeCache(urls = []) {
-            try {
-                return await API._fetch('/cloudflare/purge', {
-                    method: 'POST',
-                    body: JSON.stringify({ urls }),
-                });
-            } catch (e) {
-                throw new Error('Cache purge requires CF Pages deployment — see Ops Center');
+        async _cf(endpoint, options = {}) {
+            const token = API._getToken('cloudflare');
+            if (!token) throw new Error('Cloudflare API token required — go to Ops Center → API Vault');
+
+            const res = await fetch(
+                `https://api.cloudflare.com/client/v4${endpoint}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    ...options,
+                }
+            );
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(`CF API ${res.status}: ${(err.errors || []).map(e => e.message).join(', ')}`);
             }
+            return res.json();
+        },
+
+        async verifyToken() {
+            return API.cloudflare._cf('/user/tokens/verify');
+        },
+
+        async purgeCache(urls = []) {
+            const zoneId = CONFIG.cloudflare.zoneId;
+            const body = urls.length > 0
+                ? { files: urls }
+                : { purge_everything: true };
+
+            return API.cloudflare._cf(`/zones/${zoneId}/purge_cache`, {
+                method: 'POST',
+                body: JSON.stringify(body),
+            });
+        },
+
+        async getZoneDetails() {
+            const zoneId = CONFIG.cloudflare.zoneId;
+            return API.cloudflare._cf(`/zones/${zoneId}`);
         },
     },
 
@@ -132,7 +161,6 @@ const API = {
             try {
                 return await API._fetch(`/seo/check?url=${encodeURIComponent(url)}`);
             } catch (e) {
-                // Will fall back to client-side parsing in the SEO module
                 throw new Error('SEO proxy not available — using client-side check');
             }
         },
