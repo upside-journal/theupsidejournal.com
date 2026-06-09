@@ -4,10 +4,10 @@ All notable changes to [theupsidejournal.com](https://theupsidejournal.com) are 
 
 ---
 
-## [2026-06-14] *(scheduled)*
-- **Scheduled:** *The UN Turns 81 and Still Runs Like Internet Explorer* (Long Horizon) — by Chaste Inegbedion
-- 3 AI-generated images (cover + 2 inline: UN | Nigeria theme)
-- Full SEO/GEO meta tags, Open Graph, Twitter Card, JSON-LD structured data
+## [2026-06-09] — Immediate Publish
+- **Published:** *The UN Turns 81 and Still Runs Like Internet Explorer* (Long Horizon) — by Chaste Inegbedion
+- **Published:** *Woof Studios Africa: How Adetutu Laditan Is Taking African Creators to the World Stage at Cannes Lions 2026* (The Other Markets) — by Upside Journal Staff
+- Both articles published immediately with feed cards on homepage + sitemap entries
 
 ## [2026-06-09]
 - **Published:** *The Creator Economy Is Eating Enterprise Media — Here Are the Numbers* (Market Signal)
