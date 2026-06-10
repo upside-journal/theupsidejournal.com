@@ -528,6 +528,7 @@ const SocialModule = {
         for (const input of selected) {
             const channelId = input.value;
             const org = input.dataset.org;
+            const service = input.dataset.service;
             const token = org === 'A' ? this._getTokenA() : this._getTokenB();
 
             const mutation = `mutation($input: CreatePostInput!) {
@@ -542,6 +543,11 @@ const SocialModule = {
                 }
             }`;
 
+            // Build metadata for platforms that require it
+            const metadata = {};
+            if (service === 'facebook') metadata.facebook = { type: 'post' };
+            if (service === 'instagram') metadata.instagram = { type: 'post', shouldShareToFeed: true };
+
             const variables = {
                 input: {
                     channelId,
@@ -549,6 +555,7 @@ const SocialModule = {
                     mode,
                     schedulingType: 'automatic',
                     ...(dueAt ? { dueAt } : {}),
+                    ...(Object.keys(metadata).length ? { metadata } : {}),
                 },
             };
 
@@ -593,6 +600,7 @@ const SocialModule = {
         for (const input of selected) {
             const channelId = input.value;
             const org = input.dataset.org;
+            const service = input.dataset.service;
             const token = org === 'A' ? this._getTokenA() : this._getTokenB();
 
             const mutation = `mutation($input: CreatePostInput!) {
@@ -603,6 +611,10 @@ const SocialModule = {
                 }
             }`;
 
+            const metadata = {};
+            if (service === 'facebook') metadata.facebook = { type: 'post' };
+            if (service === 'instagram') metadata.instagram = { type: 'post', shouldShareToFeed: true };
+
             try {
                 const result = await this._gql(token, mutation, {
                     input: {
@@ -611,6 +623,7 @@ const SocialModule = {
                         mode: 'addToQueue',
                         schedulingType: 'automatic',
                         saveToDraft: true,
+                        ...(Object.keys(metadata).length ? { metadata } : {}),
                     },
                 });
                 if (result.createPost?.post?.id) success++;

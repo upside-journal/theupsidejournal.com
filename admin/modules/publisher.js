@@ -581,6 +581,7 @@ const PublisherModule = {
                             text: text,
                             mode: 'addToQueue',
                             schedulingType: 'automatic',
+                            ...(key === 'facebook' ? { metadata: { facebook: { type: 'post' } } } : {}),
                         }},
                     }),
                 });
