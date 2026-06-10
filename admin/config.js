@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════
-   MISSION CONTROL — Configuration  (v6 — Session 4)
+   MISSION CONTROL — Configuration  (v7 — Session 4b)
    Client-side config. Auth now uses email + password.
+   API keys → Token Vault (localStorage), not here.
    ═══════════════════════════════════════════════════ */
 
 const CONFIG = {
@@ -78,6 +79,25 @@ const CONFIG = {
             { day: 'Saturday',  theme: 'Spotlight Saturday' },
             { day: 'Sunday',    theme: 'Super Sunday' },
         ],
+    },
+
+    // Brevo CRM (API key via Token Vault)
+    brevo: {
+        apiUrl: 'https://api.brevo.com/v3',
+        lists: {
+            newsletter: 4,
+            brandPartners: 5,
+            vip: 6,
+        },
+        folderId: 3,
+        senderName: 'Upside Journal',
+        senderEmail: 'mfbphotos1@gmail.com',
+    },
+
+    // beehiiv Newsletter (API key via Token Vault)
+    beehiiv: {
+        apiUrl: 'https://api.beehiiv.com/v2',
+        publicationId: 'pub_735275a4-a1eb-4143-83de-a3e8ba805d0b',
     },
 
     // Cloudflare

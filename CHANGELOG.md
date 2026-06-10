@@ -4,6 +4,24 @@ All notable changes to the admin portal at `theupsidejournal.com/admin/` are doc
 
 ---
 
+## [0.5.1] — 2026-06-10 (Session 4b)
+
+### Fixed
+- **Visual Editor article extraction** — `_extractBody()` now uses `<article>` content instead of full `<body>` (removes nav/header/footer from editor view). `_wrapBody()` splices edits back into the full page template.
+- **Editor scroll containment** — `.ql-editor` now has `max-height: 70vh` + `overflow-y: auto`. No more 4600px page stretch.
+
+### Added
+- **Brevo CRM pipeline** — Created folder "Upside Journal" with 3 contact lists: Newsletter Subscribers (4), Brand Partners (5), VIP / Early Supporters (6). Synced beehiiv subscribers.
+- **beehiiv integration** — API key + publication ID configured. Subscriber sync to Brevo active.
+- **Token Vault** — Added Brevo + beehiiv rows to Ops Center → API Vault.
+- **Daily Publish cron** — 07:00 BST daily. Checks `scheduled.json` → publishes due articles → updates index + sitemap.
+
+### Changed
+- Config version → v7, all script cache-bust tags → `?v=7`.
+- GA4 Vault entry updated to correct property `539910386`.
+
+---
+
 ## [0.5.0] — 2026-06-10 (Session 4)
 
 ### Fixed
