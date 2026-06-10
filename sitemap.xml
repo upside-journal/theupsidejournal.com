@@ -5,7 +5,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://theupsidejournal.com/</loc>
-    <lastmod>2026-06-09</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -17,6 +17,40 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- The Grand-Daddy of All Festivals Is Back: Why Leaders Are Re -->
+  <url>
+    <loc>https://theupsidejournal.com/articles/cannes-lions-grand-daddy-festival.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-10</news:publication_date>
+      <news:title>The Grand-Daddy of All Festivals Is Back: Why Leaders Are Redefining Their &apos;Why&apos; at Cannes Lions 2026</news:title>
+    </news:news>
+  </url>
+
+
+  <!-- Women Champion Wednesday: Meet the 23 Women Running Cannes L -->
+  <url>
+    <loc>https://theupsidejournal.com/articles/women-champion-cannes-lions.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-10</news:publication_date>
+      <news:title>Women Champion Wednesday: Meet the 23 Women Running Cannes Lions 2026</news:title>
+    </news:news>
+  </url>
+
 
   <!-- Woof Studios Africa: How Adetutu Laditan Is Taking African C -->
   <url>
