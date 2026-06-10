@@ -4,6 +4,33 @@ All notable changes to the admin portal at `theupsidejournal.com/admin/` are doc
 
 ---
 
+## [0.3.0] — 2026-06-10
+
+### Added
+- **Email + Password Authentication** — Login screen now requires email and password (replacing single shared password). Per-user accounts with SHA-256 hashed passwords.
+- **3 Pre-approved Admin Accounts** — `askinfocnc@gmail.com`, `read@theupsidejournal.com`, `sendpicsmfb@gmail.com` seeded as admins with full access.
+- **User Registration** — "Request Access" flow on login screen. New sign-ups enter a pending state and require admin approval before gaining access.
+- **Admin Approval Workflow** — New "Users" tab in Ops Center. Admins can approve, reject, or remove users. Role management (Admin / Editor) with live updates.
+- **5-User Cap** — Registration enforces a maximum of 5 approved users (suitable for Year 1 scale).
+- **users.json** — Lightweight user store committed to the GitHub repo. No database required — reads/writes via GitHub API.
+- **auth.js** — Dedicated authentication module (`UserStore` + `Auth`) handling login, registration, session management, and user CRUD.
+
+### Changed
+- Login screen redesigned with email + password fields and "Request Access" link.
+- Sidebar footer now shows logged-in user email and Sign Out button.
+- Topbar avatar reflects current user's initial.
+- Ops Center now has 5 tabs: Cron Controller, Slack Pods, API Vault, Edge Cache, Users.
+- Config updated — auth section now uses `defaultUsers` array as fallback, `passwordHash` removed.
+- Script tags bumped to `?v=4` for cache-busting.
+- `login-logo` and `login-title` now use correct CSS variables (`--gold`, `--serif`) instead of undefined `--accent`/`--display`.
+
+### Security
+- Password-only login removed — all access now requires a valid email + password combination.
+- Pending users see a clear "awaiting approval" message and cannot access the portal.
+- Rejected users receive a "declined" message.
+
+---
+
 ## [0.2.0] — 2026-06-10
 
 ### Added

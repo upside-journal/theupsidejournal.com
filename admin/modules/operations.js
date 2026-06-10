@@ -1,13 +1,13 @@
 /* ═══════════════════════════════════════════════════
-   OPERATIONS DASHBOARD  (v3 — Session 2)
-   Cron controller, Slack pods, token vault, cache purge
-   Now with live Cloudflare cache purge
+   OPERATIONS DASHBOARD  (v4 — Session 3)
+   Cron controller, Slack pods, token vault, cache purge,
+   + User Management with approve/reject flow
    ═══════════════════════════════════════════════════ */
 
 const OperationsModule = {
     activeTab: 'cron',
     cronPaused: false,
-    cfVerified: null,  // null = not checked, true/false
+    cfVerified: null,
 
     // Slack workflow pods
     pods: [
@@ -30,15 +30,18 @@ const OperationsModule = {
 
     async render() {
         const page = document.getElementById('pageContainer');
+        const pendingCount = UserStore.getAll().filter(u => u.status === 'pending').length;
+        const usersLabel = pendingCount > 0 ? `Users (${pendingCount} pending)` : 'Users';
 
         page.innerHTML = `
-            ${UI.sectionHeader('Operations Center', 'Cron control · Slack pods · Token vault · Cache management')}
+            ${UI.sectionHeader('Operations Center', 'Cron control · Slack pods · Token vault · Cache · Users')}
 
             ${UI.tabs([
                 { id: 'cron', label: 'Cron Controller' },
                 { id: 'pods', label: 'Slack Pods (5)' },
                 { id: 'tokens', label: 'API Vault' },
                 { id: 'cache', label: 'Edge Cache' },
+                { id: 'users', label: usersLabel },
             ], this.activeTab)}
 
             <div id="opsContent"></div>
@@ -61,6 +64,7 @@ const OperationsModule = {
             case 'pods': container.innerHTML = this._podsView(); break;
             case 'tokens': container.innerHTML = this._tokensView(); break;
             case 'cache': container.innerHTML = this._cacheView(); break;
+            case 'users': container.innerHTML = this._usersView(); this._bindUserActions(); break;
         }
     },
 
@@ -232,7 +236,6 @@ const OperationsModule = {
     },
 
     async refreshTokens() {
-        // Verify Cloudflare token if set
         const cfToken = API._getToken('cloudflare');
         if (cfToken) {
             try {
@@ -247,7 +250,6 @@ const OperationsModule = {
             }
         }
 
-        // Check GitHub token
         const ghToken = API._getToken('github');
         if (ghToken) {
             UI.toast('GitHub token present ✓', 'success');
@@ -256,7 +258,7 @@ const OperationsModule = {
         this._renderTab();
     },
 
-    // ─── Edge Cache (live Cloudflare API) ───
+    // ─── Edge Cache ───
     _cacheView() {
         const hasCfToken = !!API._getToken('cloudflare');
 
@@ -351,5 +353,205 @@ const OperationsModule = {
             this._logPurge('✗ Purge failed: ' + e.message);
             UI.toast('Purge failed: ' + e.message, 'error');
         }
+    },
+
+    // ─── User Management (Session 3) ───
+    _usersView() {
+        const users = UserStore.getAll();
+        const activeCount = UserStore.countActive();
+        const pendingUsers = users.filter(u => u.status === 'pending');
+        const approvedUsers = users.filter(u => u.status === 'approved');
+        const rejectedUsers = users.filter(u => u.status === 'rejected');
+
+        return `
+            <div class="mt-16">
+                <div class="stats-grid" style="margin-bottom:20px">
+                    ${UI.statCard('APPROVED', `${activeCount} / ${UserStore.MAX_USERS}`)}
+                    ${UI.statCard('PENDING', pendingUsers.length.toString())}
+                    ${UI.statCard('REJECTED', rejectedUsers.length.toString())}
+                    ${UI.statCard('CAPACITY', activeCount >= UserStore.MAX_USERS ? 'Full' : `${UserStore.MAX_USERS - activeCount} slots`)}
+                </div>
+
+                ${pendingUsers.length > 0 ? `
+                <div class="card mb-24">
+                    <div class="card-header">
+                        <span class="card-title">⏳ Pending Approval (${pendingUsers.length})</span>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        ${pendingUsers.map(u => `
+                            <div class="user-row">
+                                <div class="user-avatar-sm">${(u.name || u.email)[0].toUpperCase()}</div>
+                                <div class="user-info">
+                                    <div class="user-name">${UI.esc(u.name || '—')}</div>
+                                    <div class="user-email">${UI.esc(u.email)}</div>
+                                </div>
+                                <div class="user-meta">
+                                    <span class="tag">Registered ${u.createdAt ? new Date(u.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}</span>
+                                </div>
+                                <div class="user-actions">
+                                    <button class="btn btn-primary btn-sm" data-action="approve" data-email="${u.email}">
+                                        ✓ Approve
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" data-action="reject" data-email="${u.email}">
+                                        ✗ Reject
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Active Users (${approvedUsers.length})</span>
+                        <button class="btn btn-secondary btn-sm" onclick="OperationsModule.refreshUsers()">↻ Refresh</button>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        ${approvedUsers.length === 0 ? `
+                            <div class="empty-state">
+                                <div class="empty-state-icon">👤</div>
+                                <div class="empty-state-title">No active users</div>
+                                <div class="empty-state-text">Users will appear here once approved</div>
+                            </div>
+                        ` : approvedUsers.map(u => `
+                            <div class="user-row">
+                                <div class="user-avatar-sm">${(u.name || u.email)[0].toUpperCase()}</div>
+                                <div class="user-info">
+                                    <div class="user-name">${UI.esc(u.name || '—')}</div>
+                                    <div class="user-email">${UI.esc(u.email)}</div>
+                                </div>
+                                <div class="user-meta">
+                                    ${UI.badge(u.role === 'admin' ? '👑 Admin' : '✎ Editor', u.role === 'admin' ? 'gold' : 'blue')}
+                                </div>
+                                <div class="user-actions">
+                                    <select class="form-input" style="width:auto;padding:4px 8px;font-size:11px"
+                                            data-action="role" data-email="${u.email}">
+                                        <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
+                                        <option value="editor" ${u.role === 'editor' ? 'selected' : ''}>Editor</option>
+                                    </select>
+                                    <button class="btn btn-ghost btn-xs" data-action="remove" data-email="${u.email}"
+                                            style="color:var(--red)" title="Remove user">✗</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="card-footer">
+                        <div style="font-size:12px;color:var(--slate-500)">
+                            👥 Max ${UserStore.MAX_USERS} users · User data stored in <code>users.json</code> (GitHub repo)
+                            · Passwords are SHA-256 hashed
+                        </div>
+                    </div>
+                </div>
+
+                ${rejectedUsers.length > 0 ? `
+                <div class="card mt-24">
+                    <div class="card-header">
+                        <span class="card-title" style="color:var(--slate-500)">Rejected (${rejectedUsers.length})</span>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        ${rejectedUsers.map(u => `
+                            <div class="user-row" style="opacity:0.6">
+                                <div class="user-avatar-sm" style="background:var(--slate-300)">${(u.name || u.email)[0].toUpperCase()}</div>
+                                <div class="user-info">
+                                    <div class="user-name">${UI.esc(u.name || '—')}</div>
+                                    <div class="user-email">${UI.esc(u.email)}</div>
+                                </div>
+                                <div class="user-meta">
+                                    ${UI.badge('Rejected', 'red')}
+                                </div>
+                                <div class="user-actions">
+                                    <button class="btn btn-ghost btn-xs" data-action="approve" data-email="${u.email}">
+                                        Reconsider
+                                    </button>
+                                    <button class="btn btn-ghost btn-xs" data-action="remove" data-email="${u.email}"
+                                            style="color:var(--red)">Remove</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+            </div>`;
+    },
+
+    _bindUserActions() {
+        // Approve buttons
+        document.querySelectorAll('[data-action="approve"]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const email = btn.dataset.email;
+                btn.disabled = true;
+                btn.textContent = 'Approving...';
+                const ok = await Auth.approveUser(email);
+                if (ok) {
+                    UI.toast(`${email} approved ✓`, 'success');
+                    this._renderTab();
+                } else {
+                    UI.toast('Approval failed', 'error');
+                    btn.disabled = false;
+                    btn.textContent = '✓ Approve';
+                }
+            });
+        });
+
+        // Reject buttons
+        document.querySelectorAll('[data-action="reject"]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const email = btn.dataset.email;
+                if (!confirm(`Reject access request from ${email}?`)) return;
+                btn.disabled = true;
+                btn.textContent = 'Rejecting...';
+                const ok = await Auth.rejectUser(email);
+                if (ok) {
+                    UI.toast(`${email} rejected`, 'warning');
+                    this._renderTab();
+                } else {
+                    UI.toast('Action failed', 'error');
+                    btn.disabled = false;
+                    btn.textContent = '✗ Reject';
+                }
+            });
+        });
+
+        // Remove buttons
+        document.querySelectorAll('[data-action="remove"]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const email = btn.dataset.email;
+                if (!confirm(`Remove ${email}? This cannot be undone.`)) return;
+                btn.disabled = true;
+                const ok = await Auth.removeUser(email);
+                if (ok) {
+                    UI.toast(`${email} removed`, 'warning');
+                    this._renderTab();
+                } else {
+                    UI.toast('Remove failed', 'error');
+                    btn.disabled = false;
+                }
+            });
+        });
+
+        // Role change selects
+        document.querySelectorAll('[data-action="role"]').forEach(sel => {
+            sel.addEventListener('change', async () => {
+                const email = sel.dataset.email;
+                const newRole = sel.value;
+                sel.disabled = true;
+                const ok = await Auth.changeRole(email, newRole);
+                if (ok) {
+                    UI.toast(`${email} → ${newRole} ✓`, 'success');
+                    this._renderTab();
+                } else {
+                    UI.toast('Role change failed', 'error');
+                    sel.disabled = false;
+                }
+            });
+        });
+    },
+
+    async refreshUsers() {
+        UI.toast('Refreshing user list...', 'warning', 2000);
+        await UserStore.load();
+        this._renderTab();
+        UI.toast('Users refreshed ✓', 'success');
     },
 };

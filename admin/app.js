@@ -1,88 +1,8 @@
 /* ═══════════════════════════════════════════════════
-   MISSION CONTROL — App Shell & Router  (v3)
+   MISSION CONTROL — App Shell & Router  (v4 — Session 3)
    Hash-based SPA routing for /admin
-   Auth gate with SHA-256 password check
+   Auth via auth.js (email + password, user management)
    ═══════════════════════════════════════════════════ */
-
-const Auth = {
-    async sha256(message) {
-        const msgBuffer = new TextEncoder().encode(message);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    },
-
-    isAuthenticated() {
-        return sessionStorage.getItem(CONFIG.auth.sessionKey) === 'true';
-    },
-
-    async login(password) {
-        const hash = await this.sha256(password);
-        if (hash === CONFIG.auth.passwordHash) {
-            sessionStorage.setItem(CONFIG.auth.sessionKey, 'true');
-            return true;
-        }
-        return false;
-    },
-
-    logout() {
-        sessionStorage.removeItem(CONFIG.auth.sessionKey);
-        location.reload();
-    },
-
-    renderLoginScreen() {
-        // Hide sidebar and topbar
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('mainContent');
-        if (sidebar) sidebar.style.display = 'none';
-        if (mainContent) mainContent.style.marginLeft = '0';
-
-        const page = document.getElementById('pageContainer');
-        const topbar = document.querySelector('.topbar');
-        if (topbar) topbar.style.display = 'none';
-
-        page.innerHTML = `
-            <div class="login-screen">
-                <div class="login-card">
-                    <div class="login-brand">
-                        <div class="login-logo">UJ</div>
-                        <h1 class="login-title">MISSION CONTROL</h1>
-                        <p class="login-sub">theupsidejournal.com</p>
-                    </div>
-                    <form id="loginForm" class="login-form" autocomplete="off">
-                        <div class="form-group">
-                            <label class="form-label">Password</label>
-                            <input type="password" class="form-input" id="loginPassword"
-                                   placeholder="Enter admin password" autofocus>
-                        </div>
-                        <div id="loginError" class="login-error" style="display:none">
-                            Incorrect password. Please try again.
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;font-size:14px">
-                            Sign In
-                        </button>
-                    </form>
-                    <div class="login-footer">
-                        🔒 Protected admin area · Powered by Viktor AI
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const pw = document.getElementById('loginPassword').value;
-            const ok = await Auth.login(pw);
-            if (ok) {
-                location.reload();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-                document.getElementById('loginPassword').value = '';
-                document.getElementById('loginPassword').focus();
-            }
-        });
-    },
-};
 
 const App = {
     routes: {
@@ -97,11 +17,22 @@ const App = {
 
     currentRoute: null,
 
-    init() {
+    async init() {
+        // ─── Load users from GitHub ───
+        await UserStore.load();
+
         // ─── Auth Gate ───
         if (!Auth.isAuthenticated()) {
             Auth.renderLoginScreen();
             return;
+        }
+
+        // Show user info in topbar
+        const user = Auth.getCurrentUser();
+        const avatarEl = document.querySelector('.user-avatar');
+        if (avatarEl && user) {
+            avatarEl.textContent = (user.name || user.email)[0].toUpperCase();
+            avatarEl.title = `${user.name || ''} (${user.email}) — ${user.role}`;
         }
 
         // Handle hash changes
@@ -136,12 +67,17 @@ const App = {
             }
         });
 
-        // Logout link in sidebar footer
+        // Logout & user info in sidebar footer
         const sidebarFooter = document.querySelector('.sidebar-footer');
-        if (sidebarFooter) {
-            sidebarFooter.innerHTML += `
-                <div style="padding:8px 20px;text-align:center">
-                    <button class="btn btn-ghost btn-xs" onclick="Auth.logout()" style="font-size:11px;color:var(--slate-400)">
+        if (sidebarFooter && user) {
+            sidebarFooter.innerHTML = `
+                <div class="system-status" id="systemStatus">
+                    <span class="status-dot online"></span>
+                    <span class="status-text">All systems nominal</span>
+                </div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-email" title="${user.email}">${user.email}</div>
+                    <button class="btn btn-ghost btn-xs sidebar-signout" onclick="Auth.logout()">
                         🔒 Sign Out
                     </button>
                 </div>
@@ -183,5 +119,5 @@ const App = {
 // Boot
 document.addEventListener('DOMContentLoaded', () => {
     App.init();
-    console.log('%c⚡ Mission Control — Upside Journal', 'font-size:14px;font-weight:bold;color:#c9963a');
+    console.log('%c⚡ Mission Control v4 — Upside Journal', 'font-size:14px;font-weight:bold;color:#c9963a');
 });

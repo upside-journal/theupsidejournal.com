@@ -1,0 +1,26 @@
+[
+  {
+    "email": "askinfocnc@gmail.com",
+    "name": "Admin (CNC)",
+    "passwordHash": "227a3ab58128d3a55cbccf92a3aee174f48d48394857298bfe97fbbe11472749",
+    "role": "admin",
+    "status": "approved",
+    "createdAt": "2026-06-10T00:00:00Z"
+  },
+  {
+    "email": "read@theupsidejournal.com",
+    "name": "Admin (UJ)",
+    "passwordHash": "227a3ab58128d3a55cbccf92a3aee174f48d48394857298bfe97fbbe11472749",
+    "role": "admin",
+    "status": "approved",
+    "createdAt": "2026-06-10T00:00:00Z"
+  },
+  {
+    "email": "sendpicsmfb@gmail.com",
+    "name": "Admin (MFB)",
+    "passwordHash": "227a3ab58128d3a55cbccf92a3aee174f48d48394857298bfe97fbbe11472749",
+    "role": "admin",
+    "status": "approved",
+    "createdAt": "2026-06-10T00:00:00Z"
+  }
+]

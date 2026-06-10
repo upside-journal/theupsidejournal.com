@@ -1,15 +1,39 @@
 /* ═══════════════════════════════════════════════════
-   MISSION CONTROL — Configuration
-   Environment variables are injected via CF Pages
-   Functions. Client-side config only.
+   MISSION CONTROL — Configuration  (v4 — Session 3)
+   Client-side config. Auth now uses email + password.
    ═══════════════════════════════════════════════════ */
 
 const CONFIG = {
-    // Auth gate — SHA-256 of admin password
-    // Default password: 'UpsideAdmin2026!' — change by updating hash
+    // Auth — email + password system
     auth: {
-        passwordHash: '227a3ab58128d3a55cbccf92a3aee174f48d48394857298bfe97fbbe11472749',
         sessionKey: 'mc_auth_session',
+        // Pre-approved admin accounts (fallback if users.json not yet in repo)
+        defaultUsers: [
+            {
+                email: 'askinfocnc@gmail.com',
+                name: 'Admin (CNC)',
+                passwordHash: '227a3ab58128d3a55cbccf92a3aee174f48d48394857298bfe97fbbe11472749',
+                role: 'admin',
+                status: 'approved',
+                createdAt: '2026-06-10T00:00:00Z',
+            },
+            {
+                email: 'read@theupsidejournal.com',
+                name: 'Admin (UJ)',
+                passwordHash: '227a3ab58128d3a55cbccf92a3aee174f48d48394857298bfe97fbbe11472749',
+                role: 'admin',
+                status: 'approved',
+                createdAt: '2026-06-10T00:00:00Z',
+            },
+            {
+                email: 'sendpicsmfb@gmail.com',
+                name: 'Admin (MFB)',
+                passwordHash: '227a3ab58128d3a55cbccf92a3aee174f48d48394857298bfe97fbbe11472749',
+                role: 'admin',
+                status: 'approved',
+                createdAt: '2026-06-10T00:00:00Z',
+            },
+        ],
     },
 
     // GitHub
@@ -19,6 +43,7 @@ const CONFIG = {
         branch: 'main',
         articlesDir: 'articles',
         imagesDir: 'images',
+        defaultToken: null,  // Set via API Vault in Ops Center
     },
 
     // Google Analytics
@@ -35,8 +60,8 @@ const CONFIG = {
     // Buffer org IDs
     buffer: {
         orgs: {
-            socialA: '6a204f0472772154c8dff558',  // LinkedIn, Instagram, X
-            socialB: '6a23463c718b53dcaa08024b',  // TikTok, Facebook, YouTube
+            socialA: '6a204f0472772154c8dff558',
+            socialB: '6a23463c718b53dcaa08024b',
         }
     },
 
