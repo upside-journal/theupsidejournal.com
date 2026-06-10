@@ -307,13 +307,26 @@ const PublisherModule = {
     },
 
     _extractBody(html) {
-        const match = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-        if (match) return match[1].trim();
+        // Prefer <article> content for cleaner editing (skip nav/header/footer)
+        const articleMatch = html.match(/<article[^>]*>([\s\S]*?)<\/article>/i);
+        if (articleMatch) return articleMatch[1].trim();
+        // Fallback to full body
+        const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        if (bodyMatch) return bodyMatch[1].trim();
         return html;
     },
 
     _wrapBody(bodyHtml) {
-        if (this._editorContent && this._editorContent.includes('<body')) {
+        if (!this._editorContent) return bodyHtml;
+        // If original had <article>, splice edited content back into it
+        if (this._editorContent.match(/<article[^>]*>/i)) {
+            return this._editorContent.replace(
+                /(<article[^>]*>)([\s\S]*?)(<\/article>)/i,
+                `$1\n${bodyHtml}\n$3`
+            );
+        }
+        // Fallback to body replacement
+        if (this._editorContent.includes('<body')) {
             return this._editorContent.replace(
                 /(<body[^>]*>)([\s\S]*?)(<\/body>)/i,
                 `$1\n${bodyHtml}\n$3`
