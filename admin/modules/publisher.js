@@ -453,6 +453,8 @@ const PublisherModule = {
         this._showSocialGenerator(title, url, slug);
     },
 
+    _selectedVideoUrl: null,
+
     _showSocialGenerator(title, url, slug) {
         const PROXY = 'https://uj-social-proxy.pages.dev/api/buffer/graphql';
         const tokenA = API._getToken('buffer_a');
@@ -463,31 +465,33 @@ const PublisherModule = {
             return;
         }
 
-        /* Platform copy templates */
+        this._selectedVideoUrl = null;
+
+        /* Platform copy templates — video channels get real captions now */
         const copies = {
             linkedin: {
-                icon: '💼', label: 'LinkedIn', charLimit: 3000,
+                icon: '💼', label: 'LinkedIn', charLimit: 3000, type: 'text',
                 text: `📰 New from The Upside Journal\n\n${title}\n\nRead the full article: ${url}\n\n#TheUpsideJournal #MediaBusiness #Entertainment`,
             },
             twitter: {
-                icon: '𝕏', label: 'X / Twitter', charLimit: 280,
+                icon: '𝕏', label: 'X / Twitter', charLimit: 280, type: 'text',
                 text: `${title}\n\n${url}\n\n#TheUpsideJournal`,
             },
             facebook: {
-                icon: '📘', label: 'Facebook', charLimit: 2000,
+                icon: '📘', label: 'Facebook', charLimit: 2000, type: 'text',
                 text: `${title}\n\nRead more on The Upside Journal 👇\n${url}`,
             },
             tiktok: {
-                icon: '🎵', label: 'TikTok (idea)', charLimit: 2200,
-                text: `[VIDEO NEEDED] ${title}\n\nCaption: ${title} — full story on theupsidejournal.com\n\n#TheUpsideJournal #MediaNews`,
+                icon: '🎵', label: 'TikTok', charLimit: 2200, type: 'video',
+                text: `${title} — full story on theupsidejournal.com\n\n#TheUpsideJournal #MediaNews #Entertainment`,
             },
             instagram: {
-                icon: '📸', label: 'Instagram (idea)', charLimit: 2200,
-                text: `[VIDEO/IMAGE NEEDED] ${title}\n\nCaption: ${title}\n\nRead the full story — link in bio\n\n#TheUpsideJournal #MediaBusiness`,
+                icon: '📸', label: 'Instagram Reel', charLimit: 2200, type: 'video',
+                text: `${title}\n\nRead the full story — link in bio\n\n#TheUpsideJournal #MediaBusiness #Entertainment`,
             },
             youtube: {
-                icon: '📺', label: 'YouTube (idea)', charLimit: 5000,
-                text: `[VIDEO NEEDED] ${title}\n\nDescription: Read the full article at ${url}\n\n#TheUpsideJournal`,
+                icon: '📺', label: 'YouTube Short', charLimit: 5000, type: 'video',
+                text: `${title}\n\nRead the full article at ${url}\n\n#TheUpsideJournal #Entertainment`,
             },
         };
 
@@ -496,7 +500,7 @@ const PublisherModule = {
         modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px';
         modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
 
-        const cards = Object.entries(copies).map(([key, p]) => `
+        const textCards = Object.entries(copies).filter(([,p]) => p.type === 'text').map(([key, p]) => `
             <div class="social-preview-card" style="border-left:3px solid var(--gold)">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
                     <strong>${p.icon} ${p.label}</strong>
@@ -509,18 +513,50 @@ const PublisherModule = {
             </div>
         `).join('');
 
+        const videoCards = Object.entries(copies).filter(([,p]) => p.type === 'video').map(([key, p]) => `
+            <div class="social-preview-card" style="border-left:3px solid #E1306C">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                    <strong>${p.icon} ${p.label}</strong>
+                    <span class="social-char-count" id="charCount_${key}">${p.text.length}/${p.charLimit}</span>
+                </div>
+                <textarea id="socialCopy_${key}" rows="3" class="form-input social-compose-text" 
+                    style="min-height:60px;font-size:13px"
+                    oninput="document.getElementById('charCount_${key}').textContent = this.value.length + '/${p.charLimit}'"
+                >${p.text}</textarea>
+            </div>
+        `).join('');
+
         modal.innerHTML = `
             <div style="background:var(--white);border-radius:var(--radius);max-width:700px;width:100%;max-height:90vh;overflow-y:auto;padding:24px">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-                    <h3 style="margin:0">📡 Generate Social Copies — ${UI.esc(title)}</h3>
+                    <h3 style="margin:0">📡 Social Copies — ${UI.esc(title)}</h3>
                     <button class="btn btn-ghost btn-sm" onclick="this.closest('.modal-overlay').remove()">✕</button>
                 </div>
-                <p style="font-size:13px;color:var(--slate-500);margin-bottom:16px">
-                    Edit the copies below, then click "Queue to Buffer" to schedule them. 
-                    Text channels (LinkedIn, X, Facebook) will be queued directly. 
-                    Video channels (TikTok, Instagram, YouTube) will be saved as Ideas.
+
+                <!-- Text channels section -->
+                <p style="font-size:13px;color:var(--slate-500);margin-bottom:12px">
+                    <strong>Text channels</strong> — queued directly to Buffer
                 </p>
-                ${cards}
+                ${textCards}
+
+                <!-- Video channels section -->
+                <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--slate-200)">
+                    <p style="font-size:13px;color:var(--slate-500);margin-bottom:12px">
+                        <strong>🎬 Video channels</strong> — attach a video to post as Reel/Short
+                    </p>
+                    <div style="margin-bottom:12px">
+                        <label class="form-label">Select Video Template</label>
+                        <div style="display:flex;gap:8px;align-items:center">
+                            <select id="videoSelector" class="form-input" style="flex:1" onchange="PublisherModule._onVideoSelect()">
+                                <option value="">⏳ Loading videos...</option>
+                            </select>
+                            <button class="btn btn-ghost btn-xs" onclick="PublisherModule._loadVideoList()" title="Refresh">↻</button>
+                        </div>
+                        <div id="videoPreviewArea" style="margin-top:8px"></div>
+                    </div>
+                    ${videoCards}
+                </div>
+
                 <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
                     <button class="btn btn-ghost" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
                     <button class="btn btn-primary" id="queueSocialBtn" onclick="PublisherModule._queueSocialCopies('${slug}')">
@@ -530,6 +566,77 @@ const PublisherModule = {
             </div>
         `;
         document.body.appendChild(modal);
+
+        // Load video list from repo
+        this._loadVideoList();
+    },
+
+    /* ─── Video picker helpers ─── */
+    async _loadVideoList() {
+        const select = document.getElementById('videoSelector');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">⏳ Loading...</option>';
+
+        try {
+            const ghToken = API._getToken('github');
+            const { owner, repo, branch } = CONFIG.github;
+            const dir = CONFIG.video?.repoDir || 'videos';
+
+            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${dir}?ref=${branch}`, {
+                headers: ghToken ? { Authorization: `token ${ghToken}` } : {},
+            });
+
+            if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+            const files = await res.json();
+
+            const videos = files
+                .filter(f => f.name.endsWith('.mp4') || f.name.endsWith('.mov') || f.name.endsWith('.webm'))
+                .sort((a, b) => a.name.localeCompare(b.name));
+
+            select.innerHTML = `<option value="">— No video (save as Ideas) —</option>`;
+            videos.forEach(v => {
+                const sizeKb = v.size ? ` (${(v.size / 1024 / 1024).toFixed(1)}MB)` : '';
+                const opt = document.createElement('option');
+                opt.value = `${CONFIG.video?.baseUrl || CONFIG.siteUrl + '/videos'}/${v.name}`;
+                opt.textContent = `🎬 ${v.name}${sizeKb}`;
+                select.appendChild(opt);
+            });
+
+            if (videos.length === 0) {
+                select.innerHTML = '<option value="">No videos in /videos/ folder</option>';
+            }
+        } catch (e) {
+            console.error('Video list error:', e);
+            select.innerHTML = '<option value="">Error loading videos</option>';
+        }
+    },
+
+    _onVideoSelect() {
+        const select = document.getElementById('videoSelector');
+        const preview = document.getElementById('videoPreviewArea');
+        const url = select?.value;
+        this._selectedVideoUrl = url || null;
+
+        if (preview) {
+            if (url) {
+                const name = url.split('/').pop();
+                preview.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--emerald-50);border-radius:var(--radius);border:1px solid var(--emerald-200)">
+                        <span style="font-size:18px">✅</span>
+                        <div>
+                            <div style="font-size:12px;font-weight:600;color:var(--emerald-700)">Video attached</div>
+                            <div style="font-size:11px;color:var(--emerald-600)">${UI.esc(name)} — will post as Reel/Short on TikTok, Instagram & YouTube</div>
+                        </div>
+                    </div>`;
+            } else {
+                preview.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--amber-50);border-radius:var(--radius);border:1px solid var(--amber-200)">
+                        <span style="font-size:18px">💡</span>
+                        <div style="font-size:11px;color:var(--amber-700)">No video selected — video channels will be saved as Ideas instead of posts</div>
+                    </div>`;
+            }
+        }
     },
 
     async _queueSocialCopies(slug) {
@@ -539,15 +646,25 @@ const PublisherModule = {
         const btn = document.getElementById('queueSocialBtn');
         if (btn) { btn.disabled = true; btn.textContent = '⏳ Queuing...'; }
 
+        const videoUrl = this._selectedVideoUrl;
+        const articleTitle = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+        /* Channel config from CONFIG */
+        const chCfg = CONFIG.buffer.channels;
+        const getToken = (org) => org === 'A' ? tokenA : tokenB;
+
+        /* Text channels — always queue as posts */
         const textChannels = {
-            linkedin:  { id: '6a20500bc687a22dd4580b6a', token: tokenA },
-            twitter:   { id: '6a23299bc687a22dd465499a', token: tokenA },
-            facebook:  { id: '6a234c5ac687a22dd465fbc2', token: tokenB },
+            linkedin:  { ...chCfg.linkedin,  token: getToken(chCfg.linkedin.org) },
+            twitter:   { ...chCfg.twitter,   token: getToken(chCfg.twitter.org) },
+            facebook:  { ...chCfg.facebook,  token: getToken(chCfg.facebook.org) },
         };
-        const ideaOrgs = {
-            tiktok:    { orgId: '6a23463c718b53dcaa08024b', token: tokenB },
-            instagram: { orgId: '6a204f0472772154c8dff558', token: tokenA },
-            youtube:   { orgId: '6a23463c718b53dcaa08024b', token: tokenB },
+
+        /* Video channels — queue as posts (with video) OR save as ideas (without video) */
+        const videoChannels = {
+            tiktok:    { ...chCfg.tiktok,    token: getToken(chCfg.tiktok.org),    orgId: CONFIG.buffer.orgs.socialB },
+            instagram: { ...chCfg.instagram, token: getToken(chCfg.instagram.org), orgId: CONFIG.buffer.orgs.socialA },
+            youtube:   { ...chCfg.youtube,   token: getToken(chCfg.youtube.org),   orgId: CONFIG.buffer.orgs.socialB },
         };
 
         const createPost = `mutation($input: CreatePostInput!) {
@@ -555,6 +672,7 @@ const PublisherModule = {
                 ... on PostActionSuccess { post { id status } }
                 ... on InvalidInputError { message }
                 ... on UnexpectedError { message }
+                ... on LimitReachedError { message }
             }
         }`;
         const createIdea = `mutation($input: CreateIdeaInput!) {
@@ -563,13 +681,16 @@ const PublisherModule = {
             }
         }`;
 
-        let queued = 0, ideas = 0, errors = 0;
+        let queued = 0, videos = 0, ideas = 0, errors = 0;
 
-        /* Queue text channels */
+        /* ─── Queue text channels ─── */
         for (const [key, ch] of Object.entries(textChannels)) {
             const text = document.getElementById(`socialCopy_${key}`)?.value?.trim();
             if (!text || !ch.token) continue;
             try {
+                const metadata = {};
+                if (key === 'facebook') metadata.facebook = { type: 'post' };
+
                 const res = await fetch(PROXY, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -578,10 +699,10 @@ const PublisherModule = {
                         query: createPost,
                         variables: { input: {
                             channelId: ch.id,
-                            text: text,
+                            text,
                             mode: 'addToQueue',
                             schedulingType: 'automatic',
-                            ...(key === 'facebook' ? { metadata: { facebook: { type: 'post' } } } : {}),
+                            ...(Object.keys(metadata).length ? { metadata } : {}),
                         }},
                     }),
                 });
@@ -591,34 +712,77 @@ const PublisherModule = {
             } catch (e) { errors++; console.error(key, e); }
         }
 
-        /* Save ideas for video channels */
-        for (const [key, ch] of Object.entries(ideaOrgs)) {
+        /* ─── Video channels: post with video OR save as idea ─── */
+        for (const [key, ch] of Object.entries(videoChannels)) {
             const text = document.getElementById(`socialCopy_${key}`)?.value?.trim();
             if (!text || !ch.token) continue;
-            try {
-                const title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                const res = await fetch(PROXY, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        token: ch.token,
-                        query: createIdea,
-                        variables: { input: {
-                            organizationId: ch.orgId,
-                            content: { title: `[VIDEO] ${title}`, text: text },
-                        }},
-                    }),
-                });
-                const data = await res.json();
-                if (data.data?.createIdea?.id) ideas++;
-                else { errors++; console.warn(key, data); }
-            } catch (e) { errors++; console.error(key, e); }
+
+            if (videoUrl) {
+                /* Video attached → create real post with video asset */
+                try {
+                    const input = {
+                        channelId: ch.id,
+                        text,
+                        mode: 'addToQueue',
+                        schedulingType: 'automatic',
+                        assets: [{ video: { url: videoUrl, metadata: { title: articleTitle } } }],
+                        metadata: {},
+                    };
+
+                    /* Platform-specific metadata */
+                    if (key === 'tiktok') {
+                        input.metadata.tiktok = { title: articleTitle };
+                    } else if (key === 'instagram') {
+                        input.metadata.instagram = { type: 'reel', shouldShareToFeed: true };
+                    } else if (key === 'youtube') {
+                        input.metadata.youtube = {
+                            title: `${articleTitle} | The Upside Journal`,
+                            categoryId: '24',
+                            madeForKids: false,
+                        };
+                    }
+
+                    const res = await fetch(PROXY, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token: ch.token, query: createPost, variables: { input } }),
+                    });
+                    const data = await res.json();
+                    if (data.data?.createPost?.post) {
+                        videos++;
+                    } else {
+                        const errMsg = data.data?.createPost?.message || data.errors?.[0]?.message || 'Unknown error';
+                        console.warn(`${key} video post failed:`, errMsg, data);
+                        errors++;
+                    }
+                } catch (e) { errors++; console.error(key, e); }
+            } else {
+                /* No video → save as Idea (fallback) */
+                try {
+                    const res = await fetch(PROXY, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            token: ch.token,
+                            query: createIdea,
+                            variables: { input: {
+                                organizationId: ch.orgId,
+                                content: { title: `[VIDEO] ${articleTitle}`, text },
+                            }},
+                        }),
+                    });
+                    const data = await res.json();
+                    if (data.data?.createIdea?.id) ideas++;
+                    else { errors++; console.warn(key, data); }
+                } catch (e) { errors++; console.error(key, e); }
+            }
         }
 
         if (btn) { btn.disabled = false; btn.textContent = '📡 Queue to Buffer'; }
 
         const summary = [];
-        if (queued) summary.push(`${queued} posts queued`);
+        if (queued) summary.push(`${queued} text posts queued`);
+        if (videos) summary.push(`${videos} video posts queued`);
         if (ideas) summary.push(`${ideas} ideas saved`);
         if (errors) summary.push(`${errors} errors`);
 

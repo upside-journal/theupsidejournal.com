@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   MISSION CONTROL — Configuration  (v7 — Session 4b)
+   MISSION CONTROL — Configuration  (v8 — Session 6)
    Client-side config. Auth now uses email + password.
    API keys → Token Vault (localStorage), not here.
    ═══════════════════════════════════════════════════ */
@@ -58,12 +58,27 @@ const CONFIG = {
         publisherId: 'pub-5980085884006955',
     },
 
-    // Buffer org IDs
+    // Buffer org IDs + channel mappings
     buffer: {
         orgs: {
             socialA: '6a204f0472772154c8dff558',
             socialB: '6a23463c718b53dcaa08024b',
-        }
+        },
+        channels: {
+            linkedin:  { id: '6a20500bc687a22dd4580b6a', org: 'A', type: 'text' },
+            instagram: { id: '6a232952c687a22dd46548ac', org: 'A', type: 'video' },
+            twitter:   { id: '6a23299bc687a22dd465499a', org: 'A', type: 'text' },
+            tiktok:    { id: '6a23492cc687a22dd465ec5f', org: 'B', type: 'video' },
+            facebook:  { id: '6a234c5ac687a22dd465fbc2', org: 'B', type: 'text' },
+            youtube:   { id: '6a234c88c687a22dd465fc91', org: 'B', type: 'video' },
+        },
+    },
+
+    // Video templates
+    video: {
+        repoDir: 'videos',
+        baseUrl: 'https://theupsidejournal.com/videos',
+        driveFolderId: '1mMaqnM2-cKSQilS-GLccq_T7hJEiDR-m',
     },
 
     // Cron schedule

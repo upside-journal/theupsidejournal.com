@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   SOCIAL SCHEDULER  (v1 — Session 5)
+   SOCIAL SCHEDULER  (v2 — Session 6)
    Buffer GraphQL integration for cross-platform
    social media scheduling across 6 channels.
    ═══════════════════════════════════════════════════ */
@@ -134,7 +134,10 @@ const SocialModule = {
                             id status text dueAt sentAt createdAt
                             channelService schedulingType
                             channel { id name service avatar }
-                            assets { ... on ImageAsset { type source thumbnail } }
+                            assets {
+                                ... on ImageAsset { type source thumbnail }
+                                ... on VideoAsset { type source thumbnail }
+                            }
                         }
                     }
                 }
@@ -261,7 +264,8 @@ const SocialModule = {
                     ? UI.badge('Scheduled', 'blue')
                     : UI.badge(post.status || 'Draft', 'slate');
 
-            const hasImage = post.assets && post.assets.length > 0;
+            const hasMedia = post.assets && post.assets.length > 0;
+            const hasVideo = hasMedia && post.assets.some(a => a.type === 'video');
 
             return `
                 <div class="social-post-row" data-post-id="${post.id}">
@@ -270,7 +274,7 @@ const SocialModule = {
                         <span class="social-post-channel-name">${UI.esc(channelName)}</span>
                     </div>
                     <div class="social-post-text">
-                        ${hasImage ? '<span title="Has media">🖼 </span>' : ''}
+                        ${hasVideo ? '<span title="Has video">🎬 </span>' : hasMedia ? '<span title="Has media">🖼 </span>' : ''}
                         ${UI.esc(text)}
                     </div>
                     <div class="social-post-time">${time}</div>
@@ -315,14 +319,17 @@ const SocialModule = {
     /* ═══════════════════════════════════════
        COMPOSE TAB
        ═══════════════════════════════════════ */
+    _composeVideoUrl: null,
+
     _composeView() {
         const channelChecks = this._channels.map(ch => {
             const info = this._serviceInfo[ch.service] || { icon: '📱', label: ch.service };
+            const isVideo = ['tiktok', 'instagram', 'youtube'].includes(ch.service);
             return `
-                <label class="social-compose-channel" title="${info.label} — ${ch.name}">
+                <label class="social-compose-channel" title="${info.label} — ${ch.name}${isVideo ? ' (video)' : ''}">
                     <input type="checkbox" value="${ch.id}" data-org="${ch._org}" data-service="${ch.service}">
                     <span class="social-compose-channel-icon">${info.icon}</span>
-                    <span class="social-compose-channel-label">${UI.esc(ch.name)}</span>
+                    <span class="social-compose-channel-label">${UI.esc(ch.name)}${isVideo ? ' 🎬' : ''}</span>
                 </label>`;
         }).join('');
 
@@ -338,10 +345,21 @@ const SocialModule = {
                                   rows="5" placeholder="Write your post... (supports emoji, hashtags, mentions)"></textarea>
                         <div style="display:flex;justify-content:space-between;margin-top:4px">
                             <span style="font-size:11px;color:var(--slate-400)">
-                                Tip: text is shared across selected channels. Platform-specific formatting coming soon.
+                                Tip: text is shared across selected channels.
                             </span>
                             <span class="social-char-count" id="charCount">0</span>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Attach Video (for TikTok, IG Reels, YouTube Shorts)</label>
+                        <div style="display:flex;gap:8px;align-items:center">
+                            <select id="composeVideoSelect" class="form-input" style="flex:1" onchange="SocialModule._onComposeVideoChange()">
+                                <option value="">⏳ Loading videos...</option>
+                            </select>
+                            <button class="btn btn-ghost btn-xs" onclick="SocialModule._loadComposeVideos()" title="Refresh">↻</button>
+                        </div>
+                        <div id="composeVideoStatus" style="margin-top:6px"></div>
                     </div>
 
                     <div class="form-group">
@@ -351,6 +369,7 @@ const SocialModule = {
                             <button class="btn btn-ghost btn-xs" onclick="SocialModule._selectAll(true)">Select All</button>
                             <button class="btn btn-ghost btn-xs" onclick="SocialModule._selectAll(false)">Deselect All</button>
                             <button class="btn btn-ghost btn-xs" onclick="SocialModule._selectTextOnly()">Text Only (LI, X, FB)</button>
+                            <button class="btn btn-ghost btn-xs" onclick="SocialModule._selectVideoOnly()">Video Only (TikTok, IG, YT)</button>
                         </div>
                     </div>
 
@@ -453,6 +472,70 @@ const SocialModule = {
             tomorrow.setDate(tomorrow.getDate() + 1);
             dateInput.value = tomorrow.toISOString().split('T')[0];
         }
+
+        // Load video list for the compose tab
+        this._loadComposeVideos();
+    },
+
+    /* ─── Compose video helpers ─── */
+    async _loadComposeVideos() {
+        const select = document.getElementById('composeVideoSelect');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">⏳ Loading...</option>';
+
+        try {
+            const ghToken = API._getToken('github');
+            const { owner, repo, branch } = CONFIG.github;
+            const dir = CONFIG.video?.repoDir || 'videos';
+
+            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${dir}?ref=${branch}`, {
+                headers: ghToken ? { Authorization: `token ${ghToken}` } : {},
+            });
+
+            if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+            const files = await res.json();
+
+            const videos = files
+                .filter(f => f.name.endsWith('.mp4') || f.name.endsWith('.mov') || f.name.endsWith('.webm'))
+                .sort((a, b) => a.name.localeCompare(b.name));
+
+            select.innerHTML = '<option value="">— No video (text only) —</option>';
+            videos.forEach(v => {
+                const sizeKb = v.size ? ` (${(v.size / 1024 / 1024).toFixed(1)}MB)` : '';
+                const opt = document.createElement('option');
+                opt.value = `${CONFIG.video?.baseUrl || CONFIG.siteUrl + '/videos'}/${v.name}`;
+                opt.textContent = `🎬 ${v.name}${sizeKb}`;
+                select.appendChild(opt);
+            });
+
+            if (videos.length === 0) {
+                select.innerHTML = '<option value="">No videos in /videos/ folder</option>';
+            }
+        } catch (e) {
+            console.error('Video list error:', e);
+            select.innerHTML = '<option value="">Error loading videos</option>';
+        }
+    },
+
+    _onComposeVideoChange() {
+        const select = document.getElementById('composeVideoSelect');
+        const status = document.getElementById('composeVideoStatus');
+        const url = select?.value;
+        this._composeVideoUrl = url || null;
+
+        if (status) {
+            if (url) {
+                const name = url.split('/').pop();
+                status.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--emerald-50);border-radius:var(--radius);border:1px solid var(--emerald-200)">
+                        <span>✅</span>
+                        <span style="font-size:11px;color:var(--emerald-700)"><strong>${UI.esc(name)}</strong> will be attached to video channel posts (TikTok, IG, YT)</span>
+                    </div>`;
+            } else {
+                status.innerHTML = '';
+            }
+        }
     },
 
     _updatePreview(text) {
@@ -498,9 +581,69 @@ const SocialModule = {
         if (text) this._updatePreview(text.value);
     },
 
+    _selectVideoOnly() {
+        document.querySelectorAll('.social-compose-channel input').forEach(cb => {
+            const svc = cb.dataset.service;
+            cb.checked = ['tiktok', 'instagram', 'youtube'].includes(svc);
+        });
+        const text = document.getElementById('composeText');
+        if (text) this._updatePreview(text.value);
+    },
+
     /* ═══════════════════════════════════════
        POST ACTIONS
        ═══════════════════════════════════════ */
+    /* ─── Build per-channel input with correct metadata & assets ─── */
+    _buildPostInput(channelId, service, text, mode, dueAt, isDraft) {
+        const videoUrl = this._composeVideoUrl;
+        const isVideoChannel = ['tiktok', 'instagram', 'youtube'].includes(service);
+
+        const input = {
+            channelId,
+            text,
+            mode,
+            schedulingType: 'automatic',
+            ...(dueAt ? { dueAt } : {}),
+            ...(isDraft ? { saveToDraft: true } : {}),
+        };
+
+        /* Platform-specific metadata */
+        const metadata = {};
+        if (service === 'facebook') {
+            metadata.facebook = { type: (isVideoChannel && videoUrl) ? 'reel' : 'post' };
+        }
+        if (service === 'instagram') {
+            metadata.instagram = {
+                type: videoUrl ? 'reel' : 'post',
+                shouldShareToFeed: true,
+            };
+        }
+        if (service === 'tiktok' && videoUrl) {
+            metadata.tiktok = { title: text.split('\n')[0].slice(0, 100) };
+        }
+        if (service === 'youtube' && videoUrl) {
+            metadata.youtube = {
+                title: text.split('\n')[0].slice(0, 100) + ' | The Upside Journal',
+                categoryId: '24',
+                madeForKids: false,
+            };
+        }
+        if (Object.keys(metadata).length) input.metadata = metadata;
+
+        /* Attach video for video channels (only if a video is selected) */
+        if (isVideoChannel && videoUrl) {
+            input.assets = [{
+                video: {
+                    url: videoUrl,
+                    metadata: { title: text.split('\n')[0].slice(0, 100) },
+                },
+            }];
+        }
+        /* No assets key for text-only posts — avoids the assets:{} validation error */
+
+        return input;
+    },
+
     async submitPost() {
         const text = document.getElementById('composeText')?.value?.trim();
         if (!text) { UI.toast('Please write some text first', 'error'); return; }
@@ -509,6 +652,12 @@ const SocialModule = {
         if (selected.length === 0) { UI.toast('Select at least one channel', 'error'); return; }
 
         const mode = document.querySelector('[name="scheduleMode"]:checked')?.value || 'addToQueue';
+
+        /* Warn if video channels selected without video */
+        const videoChannels = selected.filter(i => ['tiktok', 'instagram', 'youtube'].includes(i.dataset.service));
+        if (videoChannels.length > 0 && !this._composeVideoUrl) {
+            if (!confirm('Video channels selected but no video attached. Posts will be text-only (may fail on TikTok/YouTube). Continue?')) return;
+        }
 
         let dueAt = null;
         if (mode === 'customScheduled') {
@@ -525,52 +674,35 @@ const SocialModule = {
 
         let success = 0, failed = 0;
 
+        const mutation = `mutation($input: CreatePostInput!) {
+            createPost(input: $input) {
+                ... on PostActionSuccess { post { id status dueAt } }
+                ... on InvalidInputError { message }
+                ... on UnexpectedError { message }
+                ... on LimitReachedError { message }
+            }
+        }`;
+
         for (const input of selected) {
             const channelId = input.value;
             const org = input.dataset.org;
             const service = input.dataset.service;
             const token = org === 'A' ? this._getTokenA() : this._getTokenB();
 
-            const mutation = `mutation($input: CreatePostInput!) {
-                createPost(input: $input) {
-                    ... on PostActionSuccess { post { id status dueAt } }
-                    ... on InvalidInputError { message }
-                    ... on UnauthorizedError { message }
-                    ... on UnexpectedError { message }
-                    ... on LimitReachedError { message }
-                    ... on RestProxyError { message }
-                    ... on NotFoundError { message }
-                }
-            }`;
-
-            // Build metadata for platforms that require it
-            const metadata = {};
-            if (service === 'facebook') metadata.facebook = { type: 'post' };
-            if (service === 'instagram') metadata.instagram = { type: 'post', shouldShareToFeed: true };
-
-            const variables = {
-                input: {
-                    channelId,
-                    text,
-                    mode,
-                    schedulingType: 'automatic',
-                    ...(dueAt ? { dueAt } : {}),
-                    ...(Object.keys(metadata).length ? { metadata } : {}),
-                },
-            };
+            const postInput = this._buildPostInput(channelId, service, text, mode, dueAt, false);
 
             try {
-                const result = await this._gql(token, mutation, variables);
+                const result = await this._gql(token, mutation, { input: postInput });
                 const post = result.createPost;
                 if (post?.post?.id) {
                     success++;
                 } else {
                     const msg = post?.message || 'Unknown error';
-                    console.error(`Post failed for ${channelId}:`, msg);
+                    console.error(`Post failed for ${service}:`, msg);
                     failed++;
                 }
             } catch (e) {
-                console.error(`Post error for ${channelId}:`, e);
+                console.error(`Post error for ${service}:`, e);
                 failed++;
             }
         }
@@ -582,7 +714,11 @@ const SocialModule = {
             UI.toast(`✓ ${success} post${success > 1 ? 's' : ''} ${mode === 'shareNow' ? 'published' : 'scheduled'}${failed > 0 ? ` (${failed} failed)` : ''}`, 'success');
             document.getElementById('composeText').value = '';
             document.getElementById('charCount').textContent = '0';
-            // Refresh queue
+            this._composeVideoUrl = null;
+            const sel = document.getElementById('composeVideoSelect');
+            if (sel) sel.value = '';
+            const st = document.getElementById('composeVideoStatus');
+            if (st) st.innerHTML = '';
             await this._loadPosts();
         } else {
             UI.toast(`Failed to create posts: ${failed} error${failed > 1 ? 's' : ''}`, 'error');
@@ -596,6 +732,14 @@ const SocialModule = {
         const selected = [...document.querySelectorAll('.social-compose-channel input:checked')];
         if (selected.length === 0) { UI.toast('Select at least one channel', 'error'); return; }
 
+        const mutation = `mutation($input: CreatePostInput!) {
+            createPost(input: $input) {
+                ... on PostActionSuccess { post { id status } }
+                ... on InvalidInputError { message }
+                ... on UnexpectedError { message }
+            }
+        }`;
+
         let success = 0;
         for (const input of selected) {
             const channelId = input.value;
@@ -603,29 +747,10 @@ const SocialModule = {
             const service = input.dataset.service;
             const token = org === 'A' ? this._getTokenA() : this._getTokenB();
 
-            const mutation = `mutation($input: CreatePostInput!) {
-                createPost(input: $input) {
-                    ... on PostActionSuccess { post { id status } }
-                    ... on InvalidInputError { message }
-                    ... on UnexpectedError { message }
-                }
-            }`;
-
-            const metadata = {};
-            if (service === 'facebook') metadata.facebook = { type: 'post' };
-            if (service === 'instagram') metadata.instagram = { type: 'post', shouldShareToFeed: true };
+            const postInput = this._buildPostInput(channelId, service, text, 'addToQueue', null, true);
 
             try {
-                const result = await this._gql(token, mutation, {
-                    input: {
-                        channelId,
-                        text,
-                        mode: 'addToQueue',
-                        schedulingType: 'automatic',
-                        saveToDraft: true,
-                        ...(Object.keys(metadata).length ? { metadata } : {}),
-                    },
-                });
+                const result = await this._gql(token, mutation, { input: postInput });
                 if (result.createPost?.post?.id) success++;
             } catch (e) {
                 console.error('Draft save error:', e);
