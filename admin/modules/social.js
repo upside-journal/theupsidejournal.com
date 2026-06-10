@@ -537,7 +537,8 @@ const SocialModule = {
                     ... on UnauthorizedError { message }
                     ... on UnexpectedError { message }
                     ... on LimitReachedError { message }
-                    ... on PostPublishingError { message }
+                    ... on RestProxyError { message }
+                    ... on NotFoundError { message }
                 }
             }`;
 
@@ -547,7 +548,6 @@ const SocialModule = {
                     text,
                     mode,
                     schedulingType: 'automatic',
-                    assets: {},
                     ...(dueAt ? { dueAt } : {}),
                 },
             };
@@ -610,7 +610,6 @@ const SocialModule = {
                         text,
                         mode: 'addToQueue',
                         schedulingType: 'automatic',
-                        assets: {},
                         saveToDraft: true,
                     },
                 });
@@ -634,8 +633,7 @@ const SocialModule = {
         const mutation = `mutation($input: DeletePostInput!) {
             deletePost(input: $input) {
                 ... on DeletePostSuccess { id }
-                ... on UnauthorizedError { message }
-                ... on NotFoundError { message }
+                ... on VoidMutationError { message }
             }
         }`;
 

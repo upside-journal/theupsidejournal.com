@@ -581,7 +581,6 @@ const PublisherModule = {
                             text: text,
                             mode: 'addToQueue',
                             schedulingType: 'automatic',
-                            assets: {},
                         }},
                     }),
                 });
