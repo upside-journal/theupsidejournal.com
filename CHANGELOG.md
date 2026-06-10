@@ -4,6 +4,23 @@ All notable changes to the admin portal at `theupsidejournal.com/admin/` are doc
 
 ---
 
+## [0.4.0] — 2026-06-10
+
+### Added
+- **Scheduled Posts Integration** — Dashboard and Publisher now show Viktor AI's scheduled article queue, read from `scheduled.json` in the repo.
+- **Dashboard "Next Publish" card** — Highlights the next upcoming article with title, series, author, and date.
+- **Dashboard "Scheduled Posts" table** — Full table of all queued articles with date, series, author, and status badges (Today / Queued / Overdue).
+- **Publisher "📅 Scheduled" tab** — New tab in Publisher Engine showing the full Viktor AI queue, grouped by This Week / Upcoming / Recently Published.
+- **`scheduled.json`** — Machine-readable manifest at repo root, auto-updated by Viktor's daily publish cron. Contains all scheduled and recently published articles.
+- **`API.scheduled.getManifest()`** — New API method in `api.js` to fetch and parse the scheduled manifest via GitHub API.
+
+### Changed
+- Dashboard stat cards now show "SCHEDULED" count instead of "SITE STATUS" (site status still in sidebar).
+- Publisher tabs expanded from 2 (Live / Editor) to 3 (Live / Scheduled / Editor).
+- All script tags bumped to `?v=5` for cache-busting.
+
+---
+
 ## [0.3.0] — 2026-06-10
 
 ### Added

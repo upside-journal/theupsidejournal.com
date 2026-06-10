@@ -155,6 +155,21 @@ const API = {
         async getQueue() { return API._fetch('/buffer/queue'); },
     },
 
+    // ─── Scheduled Posts (Viktor AI manifest) ───
+    scheduled: {
+        async getManifest() {
+            // Fetch scheduled.json from repo root via GitHub API
+            try {
+                const file = await API.github.getFile('scheduled.json');
+                const content = file.content ? JSON.parse(atob(file.content)) : {};
+                return content;
+            } catch (e) {
+                console.warn('Could not load scheduled.json:', e.message);
+                return { scheduled: [], published: [], lastUpdated: null };
+            }
+        },
+    },
+
     // ─── SEO (client-side fallback) ───
     seo: {
         async checkUrl(url) {

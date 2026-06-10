@@ -1,0 +1,193 @@
+{
+  "lastUpdated": "2026-06-10T10:49:45Z",
+  "publishTime": "07:00 BST",
+  "cronAgent": "Viktor AI",
+  "scheduled": [
+    {
+      "slug": "lagos-london-diaspora-vc",
+      "title": "Lagos to London: How Nigeria's Tech Diaspora Is Reshaping Global VC",
+      "series": "The Other Markets",
+      "author": "Olusegun Olufunmiloye",
+      "date": "2026-06-11",
+      "status": "scheduled"
+    },
+    {
+      "slug": "pre-cannes-deal-roundup",
+      "title": "Pre-Cannes Deal Roundup: Who's Raising and Who's Spending",
+      "series": "Deal Flow",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-12",
+      "status": "scheduled"
+    },
+    {
+      "slug": "esg-rebrand-impact-investing",
+      "title": "ESG Is Dead. Long Live ESG. Why Impact Investing Needs a Rebrand",
+      "series": "Contrarian",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-13",
+      "status": "scheduled"
+    },
+    {
+      "slug": "ai-native-media-companies",
+      "title": "The 10-Year Case for AI-Native Media Companies",
+      "series": "Long Horizon",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-15",
+      "status": "scheduled"
+    },
+    {
+      "slug": "cannes-semafor-case-study",
+      "title": "Cannes by the Numbers: What $279K Monthly Revenue Looks Like (Semafor Case Study)",
+      "series": "Market Signal",
+      "author": "Olusegun Olufunmiloye",
+      "date": "2026-06-16",
+      "status": "scheduled"
+    },
+    {
+      "slug": "tech-stack-media-cannes",
+      "title": "The Tech Stack Behind Every Major Media Company at Cannes",
+      "series": "The Stack",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-17",
+      "status": "scheduled"
+    },
+    {
+      "slug": "cannes-sponsors-washington-lobbying",
+      "title": "What Cannes Lions' Biggest Sponsors Lobbied For in Washington This Year",
+      "series": "The Beltway Byte",
+      "author": "Olusegun Olufunmiloye",
+      "date": "2026-06-18",
+      "status": "scheduled"
+    },
+    {
+      "slug": "cannes-deal-pipeline-800m",
+      "title": "The Cannes Lions Deal Pipeline: $800M in Brand Partnerships Up for Grabs",
+      "series": "Deal Flow",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-19",
+      "status": "scheduled"
+    },
+    {
+      "slug": "african-tech-founders-cannes",
+      "title": "The African Tech Founders Heading to Cannes Lions 2026",
+      "series": "The Operator",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-20",
+      "status": "scheduled"
+    },
+    {
+      "slug": "cannes-eve-arrival",
+      "title": "Cannes Eve: The Upside Journal Arrives at Cannes Lions 2026",
+      "series": "Cannes Lions 2026",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-21",
+      "status": "scheduled"
+    },
+    {
+      "slug": "cannes-day1-live-coverage",
+      "title": "Live Coverage: Beyond the Beach \u2014 Cannes Lions 2026 Day 1",
+      "series": "Cannes Lions 2026",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-22",
+      "status": "scheduled"
+    },
+    {
+      "slug": "cannes-live-ai-demos",
+      "title": "CANNES LIVE: The AI Demos That Actually Matter",
+      "series": "The Stack",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-23",
+      "status": "scheduled"
+    },
+    {
+      "slug": "cannes-live-panel-nobody-talking",
+      "title": "CANNES LIVE: The Panel Nobody Is Talking About",
+      "series": "Contrarian",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-24",
+      "status": "scheduled"
+    },
+    {
+      "slug": "cannes-live-deals-rose",
+      "title": "CANNES LIVE: Who Signed Deals and Who Just Drank Ros\u00e9",
+      "series": "Deal Flow",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-25",
+      "status": "scheduled"
+    },
+    {
+      "slug": "cannes-wrap-relationship-roi",
+      "title": "CANNES WRAP: Beyond the Beach \u2014 Why Cannes 2026 Is Failing at Relationship ROI",
+      "series": "The Operator",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-26",
+      "status": "scheduled"
+    },
+    {
+      "slug": "post-cannes-engagement-data",
+      "title": "Post-Cannes Data Drop: Engagement Numbers That Actually Matter",
+      "series": "Market Signal",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-27",
+      "status": "scheduled"
+    }
+  ],
+  "published": [
+    {
+      "slug": "eu-ai-act-vs-us-executive-order",
+      "title": "The EU AI Act vs. The US Executive Order: A Founder's Survival Guide",
+      "series": "The Beltway Byte",
+      "author": "Olusegun Olufunmiloye",
+      "date": "2026-06-04",
+      "status": "published"
+    },
+    {
+      "slug": "africa-hidden-unicorns",
+      "title": "Africa's Hidden Unicorns",
+      "series": "The Other Markets",
+      "author": "Olusegun Olufunmiloye",
+      "date": "2026-06-05",
+      "status": "published"
+    },
+    {
+      "slug": "un-summits-deal-rooms",
+      "title": "UN Summits Into Deal Rooms",
+      "series": "Long Horizon",
+      "author": "Olusegun Olufunmiloye",
+      "date": "2026-06-06",
+      "status": "published"
+    },
+    {
+      "slug": "creator-economy-enterprise-media",
+      "title": "The Creator Economy Is Eating Enterprise Media \u2014 Here Are the Numbers",
+      "series": "Market Signal",
+      "author": "Olusegun Olufunmiloye",
+      "date": "2026-06-09",
+      "status": "published"
+    },
+    {
+      "slug": "woof-studios-africa-cannes-2026",
+      "title": "Woof Studios Africa: How Adetutu Laditan Is Taking African Creators to the World Stage at Cannes Lions 2026",
+      "series": "The Other Markets",
+      "author": "Upside Journal Staff",
+      "date": "2026-06-09",
+      "status": "published"
+    },
+    {
+      "slug": "un-turns-81-internet-explorer",
+      "title": "The UN Turns 81 and Still Runs Like Internet Explorer",
+      "series": "Long Horizon",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-09",
+      "status": "published"
+    },
+    {
+      "slug": "vertical-ai-events",
+      "title": "Vertical AI for Events: Why the Cannes $3 Billion Problem Needs a Tech Solution",
+      "series": "The Stack",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-10",
+      "status": "published"
+    }
+  ]
+}
