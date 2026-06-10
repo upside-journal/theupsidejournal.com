@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   MISSION CONTROL — Configuration  (v4 — Session 3)
+   MISSION CONTROL — Configuration  (v6 — Session 4)
    Client-side config. Auth now uses email + password.
    ═══════════════════════════════════════════════════ */
 
@@ -48,8 +48,8 @@ const CONFIG = {
 
     // Google Analytics
     ga4: {
-        propertyId: '395631476',
-        measurementId: 'G-M09QN8XXZ5',
+        propertyId: '539910386',
+        measurementId: 'G-SGW838P3YX',
     },
 
     // AdSense

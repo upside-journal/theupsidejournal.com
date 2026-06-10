@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════
    PUBLISHER — Content staging, HITL queue & scheduled posts
-   v5 — Scheduled tab reads Viktor AI manifest
+   v6 — Fixed visual editor (Quill 2.0), scheduled tab
    ═══════════════════════════════════════════════════ */
 
 const PublisherModule = {
@@ -299,10 +299,10 @@ const PublisherModule = {
             },
         });
 
-        // Load content into Quill
+        // Load content into Quill (Quill 2.0 requires clipboard API, not innerHTML)
         if (this._editorContent) {
             const bodyContent = this._extractBody(this._editorContent);
-            this._quill.root.innerHTML = bodyContent;
+            this._quill.clipboard.dangerouslyPasteHTML(bodyContent);
         }
     },
 

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   MISSION CONTROL — App Shell & Router  (v4 — Session 3)
+   MISSION CONTROL — App Shell & Router  (v6 — Session 4)
    Hash-based SPA routing for /admin
    Auth via auth.js (email + password, user management)
    ═══════════════════════════════════════════════════ */
@@ -119,5 +119,5 @@ const App = {
 // Boot
 document.addEventListener('DOMContentLoaded', () => {
     App.init();
-    console.log('%c⚡ Mission Control v4 — Upside Journal', 'font-size:14px;font-weight:bold;color:#c9963a');
+    console.log('%c⚡ Mission Control v6 — Upside Journal', 'font-size:14px;font-weight:bold;color:#c9963a');
 });

@@ -4,6 +4,23 @@ All notable changes to the admin portal at `theupsidejournal.com/admin/` are doc
 
 ---
 
+## [0.5.0] — 2026-06-10 (Session 4)
+
+### Fixed
+- **Visual Editor white screen** — Quill 2.0 requires `clipboard.dangerouslyPasteHTML()` instead of `root.innerHTML` for loading article content. Editor now renders full article HTML in visual mode correctly.
+
+### Changed
+- **GA4 consolidated** — Removed old readupside.com property (`G-M09QN8XXZ5`) from all 38 HTML files. Only `G-SGW838P3YX` (theupsidejournal.com) remains. Eliminates double-tracking.
+- **Admin config.js** — GA4 property updated to `539910386` / `G-SGW838P3YX`.
+- **Daily analytics cron** — Viktor cron pulls GA4 + Search Console data daily, writes `admin/analytics-data.json` to the repo. Mission Control reads it on load — no server needed.
+- All script + CSS cache-bust tags bumped to `?v=6`.
+- App shell version → v6, console log updated.
+
+### Added
+- **Analytics data pipeline** — `admin/analytics-data.json` committed daily by Viktor with sessions, users, pageviews, top pages, traffic sources, and search queries.
+
+---
+
 ## [0.4.0] — 2026-06-10
 
 ### Added
