@@ -454,7 +454,7 @@ const PublisherModule = {
     },
 
     _showSocialGenerator(title, url, slug) {
-        const PROXY = 'https://uj-buffer-proxy.pages.dev/api/buffer/graphql';
+        const PROXY = 'https://uj-social-proxy.pages.dev/api/buffer/graphql';
         const tokenA = API._getToken('buffer_a');
         const tokenB = API._getToken('buffer_b');
 
@@ -533,7 +533,7 @@ const PublisherModule = {
     },
 
     async _queueSocialCopies(slug) {
-        const PROXY = 'https://uj-buffer-proxy.pages.dev/api/buffer/graphql';
+        const PROXY = 'https://uj-social-proxy.pages.dev/api/buffer/graphql';
         const tokenA = API._getToken('buffer_a');
         const tokenB = API._getToken('buffer_b');
         const btn = document.getElementById('queueSocialBtn');

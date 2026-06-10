@@ -23,7 +23,7 @@ const OperationsModule = {
         { service: 'Buffer (Social A)', channels: 'LinkedIn · Instagram · X', key: 'buffer_a', masked: '0MjS••••ySzj', expiry: '—', status: 'active' },
         { service: 'Buffer (Social B)', channels: 'TikTok · Facebook · YouTube', key: 'buffer_b', masked: 'sHCp••••c5Ak', expiry: '—', status: 'active' },
         { service: 'GitHub', channels: 'Repo access', key: 'github', masked: 'ghp_••••SKtc', expiry: 'Aug 2026', status: 'active' },
-        { service: 'Cloudflare', channels: 'Zone management · Cache purge', key: 'cloudflare', masked: 'cfut_••••5f59', expiry: '—', status: 'active' },
+        { service: 'Cloudflare', channels: 'Zone management · Cache purge', key: 'cloudflare', masked: 'cfut_••••f20', expiry: '—', status: 'active' },
         { service: 'GA4', channels: 'Analytics read', key: null, masked: 'Property: 539910386', expiry: '—', status: 'active' },
         { service: 'AdSense', channels: 'Revenue data', key: null, masked: 'pub-598••6955', expiry: '—', status: 'active' },
         { service: 'Brevo', channels: 'CRM · Email campaigns', key: 'brevo', masked: 'xkeysib-••••5ZNM', expiry: '—', status: 'not_set' },

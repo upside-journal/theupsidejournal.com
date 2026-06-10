@@ -12,7 +12,7 @@ const SocialModule = {
     _postFilter: 'scheduled',
 
     /* ─── Buffer GraphQL helper (via CF Worker proxy) ─── */
-    _PROXY: 'https://uj-buffer-proxy.pages.dev/api/buffer/graphql',
+    _PROXY: 'https://uj-social-proxy.pages.dev/api/buffer/graphql',
     async _gql(token, query, variables = {}) {
         const res = await fetch(this._PROXY, {
             method: 'POST',
