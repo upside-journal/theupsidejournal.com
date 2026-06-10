@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   MISSION CONTROL — App Shell & Router  (v6 — Session 4)
+   MISSION CONTROL — App Shell & Router  (v7 — Session 5)
    Hash-based SPA routing for /admin
    Auth via auth.js (email + password, user management)
    ═══════════════════════════════════════════════════ */
@@ -11,8 +11,9 @@ const App = {
         seo:         { module: SeoModule,          title: 'SEO / GEO Suite',   breadcrumb: 'Content → SEO / GEO' },
         analytics:   { module: AnalyticsModule,    title: 'Analytics Console',  breadcrumb: 'Intelligence → Analytics' },
         assets:      { module: AssetsModule,       title: 'Asset Catalog',      breadcrumb: 'Intelligence → Assets' },
+        social:      { module: SocialModule,       title: 'Social Scheduler',   breadcrumb: 'Distribution → Social' },
+        syndication: { module: SyndicationModule,  title: 'Syndication',        breadcrumb: 'Distribution → Syndication' },
         operations:  { module: OperationsModule,   title: 'Ops Center',         breadcrumb: 'Operations → Ops Center' },
-        syndication: { module: SyndicationModule,  title: 'Syndication',        breadcrumb: 'Operations → Syndication' },
     },
 
     currentRoute: null,

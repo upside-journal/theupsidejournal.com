@@ -149,10 +149,34 @@ const API = {
         async getTopPages(days = 30) { return API._fetch(`/analytics/top-pages?days=${days}`); },
     },
 
-    // ─── Buffer ───
+    // ─── Buffer (GraphQL via CF Pages Function proxy) ───
     buffer: {
-        async getProfiles() { return API._fetch('/buffer/profiles'); },
-        async getQueue() { return API._fetch('/buffer/queue'); },
+        async _gql(token, query, variables = {}) {
+            const res = await fetch('/api/buffer/graphql', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, query, variables }),
+            });
+            const data = await res.json();
+            if (data.errors) throw new Error(data.errors.map(e => e.message).join('; '));
+            return data.data;
+        },
+        async getChannels(token, orgId) {
+            return this._gql(token,
+                `query($orgId: OrganizationId!) {
+                    channels(input: { organizationId: $orgId }) {
+                        id name service avatar type isDisconnected
+                    }
+                }`, { orgId });
+        },
+        async getPosts(token, orgId, status = 'scheduled', count = 20) {
+            return this._gql(token,
+                `query($orgId: OrganizationId!) {
+                    posts(input: { organizationId: $orgId, filter: { status: "${status}" } }, first: ${count}) {
+                        edges { node { id status text dueAt sentAt channelService channel { name } } }
+                    }
+                }`, { orgId });
+        },
     },
 
     // ─── Scheduled Posts (Viktor AI manifest) ───

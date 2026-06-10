@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="stylesheet" href="/admin/styles.css?v=8">
+    <link rel="stylesheet" href="/admin/styles.css?v=9">
     <!-- Quill.js WYSIWYG editor -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 </head>
@@ -47,14 +47,20 @@
                 <span class="nav-icon">⊞</span>
                 <span class="nav-label">Asset Catalog</span>
             </a>
-            <div class="nav-section">OPERATIONS</div>
-            <a href="#/operations" class="nav-item" data-route="operations">
-                <span class="nav-icon">⚙</span>
-                <span class="nav-label">Ops Center</span>
+            <div class="nav-section">DISTRIBUTION</div>
+            <a href="#/social" class="nav-item" data-route="social">
+                <span class="nav-icon">📡</span>
+                <span class="nav-label">Social</span>
+                <span class="nav-badge" id="socialCount">6</span>
             </a>
             <a href="#/syndication" class="nav-item" data-route="syndication">
                 <span class="nav-icon">⇄</span>
                 <span class="nav-label">Syndication</span>
+            </a>
+            <div class="nav-section">OPERATIONS</div>
+            <a href="#/operations" class="nav-item" data-route="operations">
+                <span class="nav-icon">⚙</span>
+                <span class="nav-label">Ops Center</span>
             </a>
         </nav>
         <div class="sidebar-footer">
@@ -93,17 +99,18 @@
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
     <!-- Scripts (v5 — Session 4: Scheduled Posts) -->
-    <script src="/admin/config.js?v=8"></script>
-    <script src="/admin/api.js?v=8"></script>
-    <script src="/admin/components.js?v=8"></script>
-    <script src="/admin/modules/dashboard.js?v=8"></script>
-    <script src="/admin/modules/publisher.js?v=8"></script>
-    <script src="/admin/modules/seo.js?v=8"></script>
-    <script src="/admin/modules/analytics.js?v=8"></script>
-    <script src="/admin/modules/operations.js?v=8"></script>
-    <script src="/admin/modules/assets.js?v=8"></script>
-    <script src="/admin/modules/syndication.js?v=8"></script>
-    <script src="/admin/auth.js?v=8"></script>
-    <script src="/admin/app.js?v=8"></script>
+    <script src="/admin/config.js?v=9"></script>
+    <script src="/admin/api.js?v=9"></script>
+    <script src="/admin/components.js?v=9"></script>
+    <script src="/admin/modules/dashboard.js?v=9"></script>
+    <script src="/admin/modules/publisher.js?v=9"></script>
+    <script src="/admin/modules/seo.js?v=9"></script>
+    <script src="/admin/modules/analytics.js?v=9"></script>
+    <script src="/admin/modules/operations.js?v=9"></script>
+    <script src="/admin/modules/assets.js?v=9"></script>
+    <script src="/admin/modules/social.js?v=9"></script>
+    <script src="/admin/modules/syndication.js?v=9"></script>
+    <script src="/admin/auth.js?v=9"></script>
+    <script src="/admin/app.js?v=9"></script>
 </body>
 </html>

@@ -1093,3 +1093,220 @@ select.form-input { appearance: auto; }
     font-size: 11px !important;
     color: var(--slate-400) !important;
 }
+
+/* ═══════════════════════════════════════════════════
+   SOCIAL SCHEDULER STYLES  (v1 — Session 5)
+   ═══════════════════════════════════════════════════ */
+
+/* Channel cards grid */
+.social-channels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+.social-channel-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: box-shadow var(--transition);
+    border-top: 3px solid var(--ch-color, var(--slate-300));
+}
+.social-channel-card:hover {
+    box-shadow: var(--shadow-md);
+}
+.social-channel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+.social-channel-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--slate-100);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.social-channel-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+.social-channel-info { flex: 1; min-width: 0; }
+.social-channel-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--slate-800);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.social-channel-service {
+    font-size: 11px;
+    color: var(--slate-500);
+    text-transform: capitalize;
+}
+.social-goal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-top: 1px solid var(--slate-100);
+    margin-top: 4px;
+    font-size: 12px;
+}
+.social-goal-label { color: var(--slate-500); }
+.social-goal-progress { font-weight: 600; color: var(--slate-700); }
+.social-schedule-times {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--slate-100);
+}
+
+/* Post queue list */
+.social-posts-list {
+    display: flex;
+    flex-direction: column;
+}
+.social-post-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--slate-100);
+    transition: background var(--transition);
+}
+.social-post-row:last-child { border-bottom: none; }
+.social-post-row:hover { background: var(--slate-50); }
+.social-post-channel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 120px;
+    flex-shrink: 0;
+}
+.social-post-icon { font-size: 18px; }
+.social-post-channel-name {
+    font-size: 12px;
+    color: var(--slate-600);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90px;
+}
+.social-post-text {
+    flex: 1;
+    font-size: 13px;
+    color: var(--slate-700);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+.social-post-time {
+    font-size: 11px;
+    color: var(--slate-500);
+    font-family: var(--mono);
+    white-space: nowrap;
+    min-width: 110px;
+    text-align: right;
+}
+.social-post-status { flex-shrink: 0; }
+
+/* Compose view */
+.social-compose-text {
+    resize: vertical;
+    min-height: 100px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+.social-char-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--slate-400);
+}
+.social-compose-channels {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+}
+.social-compose-channel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-size: 13px;
+}
+.social-compose-channel:hover {
+    border-color: var(--gold);
+    background: var(--gold-light);
+}
+.social-compose-channel input:checked + .social-compose-channel-icon {
+    transform: scale(1.1);
+}
+.social-compose-channel-icon { font-size: 18px; }
+.social-compose-channel-label {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--slate-700);
+}
+
+/* Schedule options */
+.social-compose-schedule {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+}
+.social-schedule-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+.social-schedule-option:hover {
+    border-color: var(--gold);
+}
+.social-schedule-option input[type="radio"] { margin-top: 3px; }
+
+/* Preview cards */
+.social-preview-card {
+    padding: 12px;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    background: var(--slate-50);
+}
+.social-preview-card:last-child { margin-bottom: 0; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .social-channels-grid {
+        grid-template-columns: 1fr;
+    }
+    .social-post-row {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .social-post-channel { min-width: auto; }
+    .social-post-time { min-width: auto; }
+    .social-compose-channels {
+        grid-template-columns: 1fr;
+    }
+    .social-compose-schedule {
+        grid-template-columns: 1fr;
+    }
+}
