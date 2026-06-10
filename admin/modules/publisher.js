@@ -206,6 +206,7 @@ const PublisherModule = {
                     </div>
                     <div class="queue-item-actions">
                         <button class="btn btn-secondary btn-xs" onclick="PublisherModule.editArticle('articles/${a.name}')">Edit</button>
+                        <button class="btn btn-ghost btn-xs" onclick="PublisherModule.generateSocialForSlug('${slug}')">📡 Social</button>
                         <button class="btn btn-ghost btn-xs" onclick="PublisherModule.checkSeo('${slug}')">SEO Check</button>
                         <a href="${CONFIG.siteUrl}/articles/${a.name}" target="_blank" class="btn btn-ghost btn-xs">View ↗</a>
                     </div>
@@ -243,6 +244,7 @@ const PublisherModule = {
                         ${this.editingFile ? `
                             <button class="btn btn-primary btn-sm" onclick="PublisherModule.publishArticle()">⬆ Publish Live</button>
                             <button class="btn btn-secondary btn-sm" onclick="PublisherModule.saveDraft()">💾 Save Draft</button>
+                            <button class="btn btn-ghost btn-sm" onclick="PublisherModule.generateSocialCopies()" title="Generate social media copies for this article">📡 Social</button>
                         ` : ''}
                     </div>
                 </div>
@@ -434,5 +436,197 @@ const PublisherModule = {
 
     checkSeo(slug) {
         window.location.hash = `/seo?url=${CONFIG.siteUrl}/articles/${slug}.html`;
+    },
+
+    /* ─── Generate Social Media Copies ─── */
+    async generateSocialForSlug(slug) {
+        const title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        const url = `${CONFIG.siteUrl}/articles/${slug}.html`;
+        this._showSocialGenerator(title, url, slug);
+    },
+
+    async generateSocialCopies() {
+        if (!this.editingFile) { UI.toast('No article open', 'error'); return; }
+        const slug = this.editingFile.replace('articles/', '').replace('.html', '');
+        const title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        const url = `${CONFIG.siteUrl}/articles/${slug}.html`;
+        this._showSocialGenerator(title, url, slug);
+    },
+
+    _showSocialGenerator(title, url, slug) {
+        const PROXY = 'https://uj-buffer-proxy.pages.dev/api/buffer/graphql';
+        const tokenA = API._getToken('buffer_a');
+        const tokenB = API._getToken('buffer_b');
+
+        if (!tokenA && !tokenB) {
+            UI.toast('Set Buffer tokens in Ops Center → API Vault first', 'error');
+            return;
+        }
+
+        /* Platform copy templates */
+        const copies = {
+            linkedin: {
+                icon: '💼', label: 'LinkedIn', charLimit: 3000,
+                text: `📰 New from The Upside Journal\n\n${title}\n\nRead the full article: ${url}\n\n#TheUpsideJournal #MediaBusiness #Entertainment`,
+            },
+            twitter: {
+                icon: '𝕏', label: 'X / Twitter', charLimit: 280,
+                text: `${title}\n\n${url}\n\n#TheUpsideJournal`,
+            },
+            facebook: {
+                icon: '📘', label: 'Facebook', charLimit: 2000,
+                text: `${title}\n\nRead more on The Upside Journal 👇\n${url}`,
+            },
+            tiktok: {
+                icon: '🎵', label: 'TikTok (idea)', charLimit: 2200,
+                text: `[VIDEO NEEDED] ${title}\n\nCaption: ${title} — full story on theupsidejournal.com\n\n#TheUpsideJournal #MediaNews`,
+            },
+            instagram: {
+                icon: '📸', label: 'Instagram (idea)', charLimit: 2200,
+                text: `[VIDEO/IMAGE NEEDED] ${title}\n\nCaption: ${title}\n\nRead the full story — link in bio\n\n#TheUpsideJournal #MediaBusiness`,
+            },
+            youtube: {
+                icon: '📺', label: 'YouTube (idea)', charLimit: 5000,
+                text: `[VIDEO NEEDED] ${title}\n\nDescription: Read the full article at ${url}\n\n#TheUpsideJournal`,
+            },
+        };
+
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px';
+        modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+
+        const cards = Object.entries(copies).map(([key, p]) => `
+            <div class="social-preview-card" style="border-left:3px solid var(--gold)">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                    <strong>${p.icon} ${p.label}</strong>
+                    <span class="social-char-count" id="charCount_${key}">${p.text.length}/${p.charLimit}</span>
+                </div>
+                <textarea id="socialCopy_${key}" rows="4" class="form-input social-compose-text" 
+                    style="min-height:80px;font-size:13px"
+                    oninput="document.getElementById('charCount_${key}').textContent = this.value.length + '/${p.charLimit}'"
+                >${p.text}</textarea>
+            </div>
+        `).join('');
+
+        modal.innerHTML = `
+            <div style="background:var(--white);border-radius:var(--radius);max-width:700px;width:100%;max-height:90vh;overflow-y:auto;padding:24px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                    <h3 style="margin:0">📡 Generate Social Copies — ${UI.esc(title)}</h3>
+                    <button class="btn btn-ghost btn-sm" onclick="this.closest('.modal-overlay').remove()">✕</button>
+                </div>
+                <p style="font-size:13px;color:var(--slate-500);margin-bottom:16px">
+                    Edit the copies below, then click "Queue to Buffer" to schedule them. 
+                    Text channels (LinkedIn, X, Facebook) will be queued directly. 
+                    Video channels (TikTok, Instagram, YouTube) will be saved as Ideas.
+                </p>
+                ${cards}
+                <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+                    <button class="btn btn-ghost" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                    <button class="btn btn-primary" id="queueSocialBtn" onclick="PublisherModule._queueSocialCopies('${slug}')">
+                        📡 Queue to Buffer
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    },
+
+    async _queueSocialCopies(slug) {
+        const PROXY = 'https://uj-buffer-proxy.pages.dev/api/buffer/graphql';
+        const tokenA = API._getToken('buffer_a');
+        const tokenB = API._getToken('buffer_b');
+        const btn = document.getElementById('queueSocialBtn');
+        if (btn) { btn.disabled = true; btn.textContent = '⏳ Queuing...'; }
+
+        const textChannels = {
+            linkedin:  { id: '6a20500bc687a22dd4580b6a', token: tokenA },
+            twitter:   { id: '6a23299bc687a22dd465499a', token: tokenA },
+            facebook:  { id: '6a234c5ac687a22dd465fbc2', token: tokenB },
+        };
+        const ideaOrgs = {
+            tiktok:    { orgId: '6a23463c718b53dcaa08024b', token: tokenB },
+            instagram: { orgId: '6a204f0472772154c8dff558', token: tokenA },
+            youtube:   { orgId: '6a23463c718b53dcaa08024b', token: tokenB },
+        };
+
+        const createPost = `mutation($input: CreatePostInput!) {
+            createPost(input: $input) {
+                ... on PostActionSuccess { post { id status } }
+                ... on InvalidInputError { message }
+                ... on UnexpectedError { message }
+            }
+        }`;
+        const createIdea = `mutation($input: CreateIdeaInput!) {
+            createIdea(input: $input) {
+                ... on Idea { id content { title } }
+            }
+        }`;
+
+        let queued = 0, ideas = 0, errors = 0;
+
+        /* Queue text channels */
+        for (const [key, ch] of Object.entries(textChannels)) {
+            const text = document.getElementById(`socialCopy_${key}`)?.value?.trim();
+            if (!text || !ch.token) continue;
+            try {
+                const res = await fetch(PROXY, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: ch.token,
+                        query: createPost,
+                        variables: { input: {
+                            channelId: ch.id,
+                            text: text,
+                            mode: 'addToQueue',
+                            schedulingType: 'automatic',
+                            assets: {},
+                        }},
+                    }),
+                });
+                const data = await res.json();
+                if (data.data?.createPost?.post) queued++;
+                else { errors++; console.warn(key, data); }
+            } catch (e) { errors++; console.error(key, e); }
+        }
+
+        /* Save ideas for video channels */
+        for (const [key, ch] of Object.entries(ideaOrgs)) {
+            const text = document.getElementById(`socialCopy_${key}`)?.value?.trim();
+            if (!text || !ch.token) continue;
+            try {
+                const title = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                const res = await fetch(PROXY, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: ch.token,
+                        query: createIdea,
+                        variables: { input: {
+                            organizationId: ch.orgId,
+                            content: { title: `[VIDEO] ${title}`, text: text },
+                        }},
+                    }),
+                });
+                const data = await res.json();
+                if (data.data?.createIdea?.id) ideas++;
+                else { errors++; console.warn(key, data); }
+            } catch (e) { errors++; console.error(key, e); }
+        }
+
+        if (btn) { btn.disabled = false; btn.textContent = '📡 Queue to Buffer'; }
+
+        const summary = [];
+        if (queued) summary.push(`${queued} posts queued`);
+        if (ideas) summary.push(`${ideas} ideas saved`);
+        if (errors) summary.push(`${errors} errors`);
+
+        UI.toast(summary.join(', ') || 'Nothing to queue', errors ? 'error' : 'success');
+
+        if (!errors) {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) setTimeout(() => modal.remove(), 1500);
+        }
     },
 };

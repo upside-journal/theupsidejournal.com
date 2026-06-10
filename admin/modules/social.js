@@ -11,9 +11,10 @@ const SocialModule = {
     _loading: false,
     _postFilter: 'scheduled',
 
-    /* ─── Buffer GraphQL helper (via CF Pages Function proxy) ─── */
+    /* ─── Buffer GraphQL helper (via CF Worker proxy) ─── */
+    _PROXY: 'https://uj-buffer-proxy.pages.dev/api/buffer/graphql',
     async _gql(token, query, variables = {}) {
-        const res = await fetch('/api/buffer/graphql', {
+        const res = await fetch(this._PROXY, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token, query, variables }),

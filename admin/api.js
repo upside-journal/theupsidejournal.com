@@ -149,10 +149,11 @@ const API = {
         async getTopPages(days = 30) { return API._fetch(`/analytics/top-pages?days=${days}`); },
     },
 
-    // ─── Buffer (GraphQL via CF Pages Function proxy) ───
+    // ─── Buffer (GraphQL via CF Worker proxy) ───
     buffer: {
+        _PROXY: 'https://uj-buffer-proxy.pages.dev/api/buffer/graphql',
         async _gql(token, query, variables = {}) {
-            const res = await fetch('/api/buffer/graphql', {
+            const res = await fetch(this._PROXY, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token, query, variables }),
