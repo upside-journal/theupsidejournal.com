@@ -199,11 +199,15 @@ const OperationsModule = {
                     ${this.tokens.map(t => {
                         const stored = t.key ? API._getToken(t.key) : null;
                         const displayStatus = stored ? 'active' : t.status;
+                        // Dynamic mask from actual stored token
+                        const mask = stored
+                            ? (stored.length > 12 ? stored.slice(0, 4) + '••••' + stored.slice(-4) : '••••' + stored.slice(-4))
+                            : null;
                         return `
                         <div class="token-row">
                             <div class="token-service">${t.service}</div>
                             <div style="flex:1">
-                                <div class="token-masked">${stored ? t.masked : 'Not stored locally'}</div>
+                                <div class="token-masked">${mask || (t.key ? 'Not stored locally' : t.masked)}</div>
                                 <div style="font-size:11px;color:var(--slate-400);margin-top:2px">${t.channels}</div>
                             </div>
                             <div class="token-expiry">${t.expiry}</div>
@@ -231,32 +235,63 @@ const OperationsModule = {
     setTokenPrompt(key, label) {
         const val = prompt(`Enter API token for ${label}:`);
         if (val && val.trim()) {
-            API.setToken(key, val.trim());
-            UI.toast(`${label} token saved ✓`, 'success');
+            const trimmed = val.trim();
+            try {
+                API.setToken(key, trimmed);
+                // Verify it persisted
+                const check = API._getToken(key);
+                if (check === trimmed) {
+                    // Update the masked display in the registry
+                    const entry = this.tokens.find(t => t.key === key);
+                    if (entry) {
+                        const v = trimmed;
+                        entry.masked = v.length > 12
+                            ? v.slice(0, 4) + '••••' + v.slice(-4)
+                            : '••••' + v.slice(-4);
+                    }
+                    UI.toast(`${label} token saved ✓`, 'success');
+                } else {
+                    UI.toast(`${label} token failed to persist — check browser storage settings`, 'error');
+                }
+            } catch (e) {
+                UI.toast(`Failed to save ${label} token: ${e.message}`, 'error');
+                console.error('Token save error:', e);
+            }
             this._renderTab();
         }
     },
 
     async refreshTokens() {
+        let count = 0;
+        // Check each token that has a key
+        for (const t of this.tokens) {
+            if (t.key && API._getToken(t.key)) {
+                count++;
+                UI.toast(`${t.service} token stored ✓`, 'success');
+            }
+        }
+
+        // Try Cloudflare live verify (may fail due to CORS from browser)
         const cfToken = API._getToken('cloudflare');
         if (cfToken) {
             try {
                 const result = await API.cloudflare.verifyToken();
                 if (result.success) {
                     this.cfVerified = true;
-                    UI.toast('Cloudflare token verified ✓', 'success');
+                    UI.toast('Cloudflare token verified live ✓', 'success');
                 }
             } catch (e) {
                 this.cfVerified = false;
-                UI.toast('Cloudflare token invalid', 'error');
+                // CORS blocks browser→CF API; token may still be valid
+                if (e.message && e.message.includes('Failed to fetch')) {
+                    UI.toast('Cloudflare token stored (live verify blocked by CORS — normal for browser)', 'info');
+                } else {
+                    UI.toast(`Cloudflare verify error: ${e.message}`, 'error');
+                }
             }
         }
 
-        const ghToken = API._getToken('github');
-        if (ghToken) {
-            UI.toast('GitHub token present ✓', 'success');
-        }
-
+        if (count === 0) UI.toast('No tokens stored yet', 'info');
         this._renderTab();
     },
 
