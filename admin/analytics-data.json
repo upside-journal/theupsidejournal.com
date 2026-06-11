@@ -1,0 +1,92 @@
+{
+  "generated": "2026-06-11T05:08:59.669637+00:00",
+  "period": {
+    "ga4": {
+      "start": "2026-05-12",
+      "end": "2026-06-10",
+      "days": 30
+    },
+    "gsc": {
+      "start": "2026-05-14",
+      "end": "2026-06-10",
+      "days": 28
+    }
+  },
+  "ga4": {
+    "note": "GA4 data pending approval \u2014 scheduled cron requires one-time user approval for GA4 read actions. Will be populated on next run once approved.",
+    "summary": null,
+    "daily": [],
+    "topPages": [],
+    "topSources": []
+  },
+  "gsc": {
+    "summary": {
+      "totalClicks": 0,
+      "totalImpressions": 2,
+      "avgCtr": 0.0,
+      "avgPosition": 3.5,
+      "note": "Site is new \u2014 very limited search data. Only 2 impressions recorded in the period."
+    },
+    "topQueries": [],
+    "topPages": [
+      {
+        "page": "https://theupsidejournal.com/",
+        "clicks": 0,
+        "impressions": 2,
+        "ctr": 0.0,
+        "position": 3.5
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-06-02",
+        "clicks": 0,
+        "impressions": 0,
+        "ctr": 0.0,
+        "position": 0
+      },
+      {
+        "date": "2026-06-03",
+        "clicks": 0,
+        "impressions": 0,
+        "ctr": 0.0,
+        "position": 0
+      },
+      {
+        "date": "2026-06-04",
+        "clicks": 0,
+        "impressions": 0,
+        "ctr": 0.0,
+        "position": 0
+      },
+      {
+        "date": "2026-06-05",
+        "clicks": 0,
+        "impressions": 0,
+        "ctr": 0.0,
+        "position": 0
+      },
+      {
+        "date": "2026-06-06",
+        "clicks": 0,
+        "impressions": 1,
+        "ctr": 0.0,
+        "position": 6.0
+      },
+      {
+        "date": "2026-06-07",
+        "clicks": 0,
+        "impressions": 0,
+        "ctr": 0.0,
+        "position": 0
+      },
+      {
+        "date": "2026-06-08",
+        "clicks": 0,
+        "impressions": 1,
+        "ctr": 0.0,
+        "position": 1.0
+      }
+    ]
+  }
+}
