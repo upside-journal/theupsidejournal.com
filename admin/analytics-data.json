@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-11T05:08:59.669637+00:00",
+  "generated": "2026-06-11T08:19:42.456982+00:00",
   "period": {
     "ga4": {
       "start": "2026-05-12",
@@ -13,11 +13,183 @@
     }
   },
   "ga4": {
-    "note": "GA4 data pending approval \u2014 scheduled cron requires one-time user approval for GA4 read actions. Will be populated on next run once approved.",
-    "summary": null,
-    "daily": [],
-    "topPages": [],
-    "topSources": []
+    "summary": {
+      "totalSessions": 235,
+      "totalUsers": 164,
+      "totalPageviews": 325,
+      "avgSessionDuration": 127.01,
+      "avgBounceRate": 0.6895,
+      "dataStartDate": "2026-06-01",
+      "dataEndDate": "2026-06-10",
+      "daysWithData": 10,
+      "note": "GA4 data only recorded from 2026-06-01 (site launched recently). No data for May 12-31."
+    },
+    "daily": [
+      {
+        "date": "2026-06-01",
+        "sessions": 7,
+        "totalUsers": 7,
+        "screenPageViews": 7,
+        "avgSessionDuration": 1.93,
+        "bounceRate": 1.0
+      },
+      {
+        "date": "2026-06-02",
+        "sessions": 42,
+        "totalUsers": 30,
+        "screenPageViews": 69,
+        "avgSessionDuration": 214.33,
+        "bounceRate": 0.667
+      },
+      {
+        "date": "2026-06-03",
+        "sessions": 35,
+        "totalUsers": 27,
+        "screenPageViews": 41,
+        "avgSessionDuration": 72.47,
+        "bounceRate": 0.629
+      },
+      {
+        "date": "2026-06-04",
+        "sessions": 22,
+        "totalUsers": 13,
+        "screenPageViews": 25,
+        "avgSessionDuration": 122.15,
+        "bounceRate": 0.682
+      },
+      {
+        "date": "2026-06-05",
+        "sessions": 33,
+        "totalUsers": 25,
+        "screenPageViews": 47,
+        "avgSessionDuration": 10.92,
+        "bounceRate": 0.636
+      },
+      {
+        "date": "2026-06-06",
+        "sessions": 13,
+        "totalUsers": 10,
+        "screenPageViews": 17,
+        "avgSessionDuration": 17.2,
+        "bounceRate": 0.615
+      },
+      {
+        "date": "2026-06-07",
+        "sessions": 11,
+        "totalUsers": 6,
+        "screenPageViews": 14,
+        "avgSessionDuration": 130.66,
+        "bounceRate": 0.727
+      },
+      {
+        "date": "2026-06-08",
+        "sessions": 23,
+        "totalUsers": 16,
+        "screenPageViews": 27,
+        "avgSessionDuration": 49.0,
+        "bounceRate": 0.696
+      },
+      {
+        "date": "2026-06-09",
+        "sessions": 32,
+        "totalUsers": 21,
+        "screenPageViews": 48,
+        "avgSessionDuration": 79.07,
+        "bounceRate": 0.625
+      },
+      {
+        "date": "2026-06-10",
+        "sessions": 17,
+        "totalUsers": 9,
+        "screenPageViews": 30,
+        "avgSessionDuration": 584.14,
+        "bounceRate": 1.0
+      }
+    ],
+    "topPages": [
+      {
+        "pagePath": "/",
+        "pageviews": 146,
+        "sessions": 118
+      },
+      {
+        "pagePath": "/articles/cannes-lions-women-taking-stage.html",
+        "pageviews": 42,
+        "sessions": 39
+      },
+      {
+        "pagePath": "/articles/cannes-3b-networking-failure.html",
+        "pageviews": 22,
+        "sessions": 25
+      },
+      {
+        "pagePath": "/about",
+        "pageviews": 13,
+        "sessions": 19
+      },
+      {
+        "pagePath": "/about.html",
+        "pageviews": 12,
+        "sessions": 12
+      },
+      {
+        "pagePath": "/articles/un-turns-81-internet-explorer.html",
+        "pageviews": 12,
+        "sessions": 9
+      },
+      {
+        "pagePath": "/articles/africa-hidden-unicorns.html",
+        "pageviews": 11,
+        "sessions": 11
+      },
+      {
+        "pagePath": "/articles/woof-studios-africa-cannes-2026.html",
+        "pageviews": 11,
+        "sessions": 9
+      },
+      {
+        "pagePath": "/articles/cannes-un-reform-reality-gap.html",
+        "pageviews": 10,
+        "sessions": 10
+      },
+      {
+        "pagePath": "/articles/saas-churn-metric.html",
+        "pageviews": 9,
+        "sessions": 8
+      }
+    ],
+    "topSources": [
+      {
+        "source": "(direct)",
+        "sessions": 196,
+        "users": 104
+      },
+      {
+        "source": "linkedin.com",
+        "sessions": 18,
+        "users": 14
+      },
+      {
+        "source": "(not set)",
+        "sessions": 8,
+        "users": 5
+      },
+      {
+        "source": "facebook.com",
+        "sessions": 8,
+        "users": 8
+      },
+      {
+        "source": "m.facebook.com",
+        "sessions": 7,
+        "users": 7
+      },
+      {
+        "source": "t.co",
+        "sessions": 2,
+        "users": 2
+      }
+    ]
   },
   "gsc": {
     "summary": {
@@ -25,7 +197,7 @@
       "totalImpressions": 2,
       "avgCtr": 0.0,
       "avgPosition": 3.5,
-      "note": "Site is new \u2014 very limited search data. Only 2 impressions recorded in the period."
+      "note": "Site is new \u2014 very limited search data. Only 2 impressions recorded."
     },
     "topQueries": [],
     "topPages": [
