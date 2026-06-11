@@ -61,7 +61,15 @@ const ManifestModule = {
             const rows = (gviz.table.rows || []).map(r => {
                 const obj = {};
                 r.c.forEach((cell, i) => {
-                    obj[cols[i]] = cell ? (cell.v != null ? String(cell.v) : '') : '';
+                    if (!cell || cell.v == null) { obj[cols[i]] = ''; return; }
+                    let val = cell.f || String(cell.v); // prefer formatted value
+                    // Handle gviz Date() format → YYYY-MM-DD
+                    const dateMatch = String(cell.v).match(/^Date\((\d+),(\d+),(\d+)\)$/);
+                    if (dateMatch) {
+                        const [, y, m, d] = dateMatch;
+                        val = `${y}-${String(+m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                    }
+                    obj[cols[i]] = val;
                 });
                 return obj;
             });
