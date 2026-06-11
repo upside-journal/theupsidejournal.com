@@ -74,11 +74,23 @@ const CONFIG = {
         },
     },
 
+    // Content Manifest (Google Sheets — public read)
+    manifest: {
+        sheetId: '1FQ_R3Kp0f6pE6JtVbiwpvZdyAi8nmcvbMxKbw8FQcB8',
+        cacheTTL: 300000, // 5 min cache
+    },
+
     // Video templates
     video: {
         repoDir: 'videos',
         baseUrl: 'https://theupsidejournal.com/videos',
         driveFolderId: '1mMaqnM2-cKSQilS-GLccq_T7hJEiDR-m',
+    },
+
+    // Social images
+    images: {
+        repoDir: 'images/social',
+        baseUrl: 'https://theupsidejournal.com/images/social',
     },
 
     // Cron schedule

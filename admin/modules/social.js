@@ -320,6 +320,7 @@ const SocialModule = {
        COMPOSE TAB
        ═══════════════════════════════════════ */
     _composeVideoUrl: null,
+    _composeImageUrl: null,
 
     _composeView() {
         const channelChecks = this._channels.map(ch => {
@@ -352,7 +353,18 @@ const SocialModule = {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Attach Video (for TikTok, IG Reels, YouTube Shorts)</label>
+                        <label class="form-label">🖼 Attach Image (for LinkedIn, X, Facebook)</label>
+                        <div style="display:flex;gap:8px;align-items:center">
+                            <select id="composeImageSelect" class="form-input" style="flex:1" onchange="SocialModule._onComposeImageChange()">
+                                <option value="">⏳ Loading images...</option>
+                            </select>
+                            <button class="btn btn-ghost btn-xs" onclick="SocialModule._loadComposeImages()" title="Refresh">↻</button>
+                        </div>
+                        <div id="composeImageStatus" style="margin-top:6px"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">🎬 Attach Video (for TikTok, IG Reels, YouTube Shorts)</label>
                         <div style="display:flex;gap:8px;align-items:center">
                             <select id="composeVideoSelect" class="form-input" style="flex:1" onchange="SocialModule._onComposeVideoChange()">
                                 <option value="">⏳ Loading videos...</option>
@@ -473,8 +485,71 @@ const SocialModule = {
             dateInput.value = tomorrow.toISOString().split('T')[0];
         }
 
-        // Load video list for the compose tab
+        // Load video + image lists for the compose tab
         this._loadComposeVideos();
+        this._loadComposeImages();
+    },
+
+    /* ─── Compose image helpers ─── */
+    async _loadComposeImages() {
+        const select = document.getElementById('composeImageSelect');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">⏳ Loading...</option>';
+
+        try {
+            const ghToken = API._getToken('github');
+            const { owner, repo, branch } = CONFIG.github;
+            const dir = CONFIG.images?.repoDir || 'images/social';
+
+            let images = [];
+            try {
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${dir}?ref=${branch}`, {
+                    headers: ghToken ? { Authorization: `token ${ghToken}` } : {},
+                });
+                if (res.ok) {
+                    const files = await res.json();
+                    images = files.filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
+                        .sort((a, b) => a.name.localeCompare(b.name));
+                }
+            } catch (e) { /* folder may not exist yet */ }
+
+            select.innerHTML = '<option value="">— No image (text only) —</option>';
+            images.forEach(img => {
+                const sizeStr = img.size ? ` (${(img.size / 1024).toFixed(0)}KB)` : '';
+                const opt = document.createElement('option');
+                opt.value = `${CONFIG.images?.baseUrl || CONFIG.siteUrl + '/images/social'}/${img.name}`;
+                opt.textContent = `🖼 ${img.name}${sizeStr}`;
+                select.appendChild(opt);
+            });
+
+            if (images.length === 0) {
+                select.innerHTML = '<option value="">No images in /images/social/ yet</option>';
+            }
+        } catch (e) {
+            console.error('Image list error:', e);
+            select.innerHTML = '<option value="">Error loading images</option>';
+        }
+    },
+
+    _onComposeImageChange() {
+        const select = document.getElementById('composeImageSelect');
+        const status = document.getElementById('composeImageStatus');
+        const url = select?.value;
+        this._composeImageUrl = url || null;
+
+        if (status) {
+            if (url) {
+                const name = url.split('/').pop();
+                status.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--blue-50,#eff6ff);border-radius:var(--radius);border:1px solid var(--blue-200,#bfdbfe)">
+                        <img src="${url}" style="width:32px;height:32px;object-fit:cover;border-radius:3px" onerror="this.style.display='none'">
+                        <span style="font-size:11px;color:var(--blue-700,#1d4ed8)"><strong>${UI.esc(name)}</strong> will be attached to text posts (LI, X, FB)</span>
+                    </div>`;
+            } else {
+                status.innerHTML = '';
+            }
+        }
     },
 
     /* ─── Compose video helpers ─── */
@@ -497,15 +572,15 @@ const SocialModule = {
             const files = await res.json();
 
             const videos = files
-                .filter(f => f.name.endsWith('.mp4') || f.name.endsWith('.mov') || f.name.endsWith('.webm'))
+                .filter(f => /\.(mp4|mov|webm)$/i.test(f.name))
                 .sort((a, b) => a.name.localeCompare(b.name));
 
             select.innerHTML = '<option value="">— No video (text only) —</option>';
             videos.forEach(v => {
-                const sizeKb = v.size ? ` (${(v.size / 1024 / 1024).toFixed(1)}MB)` : '';
+                const sizeStr = v.size ? ` (${(v.size / 1024 / 1024).toFixed(1)}MB)` : '';
                 const opt = document.createElement('option');
                 opt.value = `${CONFIG.video?.baseUrl || CONFIG.siteUrl + '/videos'}/${v.name}`;
-                opt.textContent = `🎬 ${v.name}${sizeKb}`;
+                opt.textContent = `🎬 ${v.name}${sizeStr}`;
                 select.appendChild(opt);
             });
 
@@ -596,7 +671,9 @@ const SocialModule = {
     /* ─── Build per-channel input with correct metadata & assets ─── */
     _buildPostInput(channelId, service, text, mode, dueAt, isDraft) {
         const videoUrl = this._composeVideoUrl;
+        const imageUrl = this._composeImageUrl;
         const isVideoChannel = ['tiktok', 'instagram', 'youtube'].includes(service);
+        const isTextChannel = ['linkedin', 'twitter', 'facebook'].includes(service);
 
         const input = {
             channelId,
@@ -638,6 +715,10 @@ const SocialModule = {
                     metadata: { title: text.split('\n')[0].slice(0, 100) },
                 },
             }];
+        }
+        /* Attach image for text channels (LI, X, FB) if an image is selected */
+        else if (isTextChannel && imageUrl) {
+            input.assets = [{ image: { url: imageUrl } }];
         }
         /* No assets key for text-only posts — avoids the assets:{} validation error */
 
@@ -715,10 +796,15 @@ const SocialModule = {
             document.getElementById('composeText').value = '';
             document.getElementById('charCount').textContent = '0';
             this._composeVideoUrl = null;
+            this._composeImageUrl = null;
             const sel = document.getElementById('composeVideoSelect');
             if (sel) sel.value = '';
             const st = document.getElementById('composeVideoStatus');
             if (st) st.innerHTML = '';
+            const imgSel = document.getElementById('composeImageSelect');
+            if (imgSel) imgSel.value = '';
+            const imgSt = document.getElementById('composeImageStatus');
+            if (imgSt) imgSt.innerHTML = '';
             await this._loadPosts();
         } else {
             UI.toast(`Failed to create posts: ${failed} error${failed > 1 ? 's' : ''}`, 'error');

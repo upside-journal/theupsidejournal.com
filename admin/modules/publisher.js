@@ -454,8 +454,9 @@ const PublisherModule = {
     },
 
     _selectedVideoUrl: null,
+    _selectedImageUrl: null,
 
-    _showSocialGenerator(title, url, slug) {
+    async _showSocialGenerator(title, url, slug) {
         const PROXY = 'https://uj-social-proxy.pages.dev/api/buffer/graphql';
         const tokenA = API._getToken('buffer_a');
         const tokenB = API._getToken('buffer_b');
@@ -466,8 +467,13 @@ const PublisherModule = {
         }
 
         this._selectedVideoUrl = null;
+        this._selectedImageUrl = null;
 
-        /* Platform copy templates — video channels get real captions now */
+        /* Try to auto-match from manifest */
+        let manifestMatch = null;
+        try { manifestMatch = await ManifestModule.getArticleMedia(slug); } catch (e) { /* ignore */ }
+
+        /* Platform copy templates */
         const copies = {
             linkedin: {
                 icon: '💼', label: 'LinkedIn', charLimit: 3000, type: 'text',
@@ -526,11 +532,37 @@ const PublisherModule = {
             </div>
         `).join('');
 
+        /* Manifest status pill */
+        const manifestPill = manifestMatch
+            ? `<span style="font-size:11px;padding:2px 8px;border-radius:10px;background:var(--emerald-50);color:var(--emerald-700);border:1px solid var(--emerald-200)">
+                📋 Manifest: ${manifestMatch.videoStatus || 'No video'} ${manifestMatch.imageFilename ? '• 🖼 Image ready' : ''}
+               </span>`
+            : `<span style="font-size:11px;padding:2px 8px;border-radius:10px;background:var(--amber-50);color:var(--amber-700);border:1px solid var(--amber-200)">
+                📋 Not in manifest
+               </span>`;
+
         modal.innerHTML = `
             <div style="background:var(--white);border-radius:var(--radius);max-width:700px;width:100%;max-height:90vh;overflow-y:auto;padding:24px">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-                    <h3 style="margin:0">📡 Social Copies — ${UI.esc(title)}</h3>
+                    <div>
+                        <h3 style="margin:0 0 4px 0">📡 Social Copies — ${UI.esc(title)}</h3>
+                        ${manifestPill}
+                    </div>
                     <button class="btn btn-ghost btn-sm" onclick="this.closest('.modal-overlay').remove()">✕</button>
+                </div>
+
+                <!-- Image selector for text channels -->
+                <div style="margin-bottom:16px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius)">
+                    <p style="font-size:13px;color:var(--slate-500);margin:0 0 8px 0">
+                        <strong>🖼 Image attachment</strong> — for LinkedIn, X & Facebook posts
+                    </p>
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <select id="imageSelector" class="form-input" style="flex:1" onchange="PublisherModule._onImageSelect()">
+                            <option value="">⏳ Loading images...</option>
+                        </select>
+                        <button class="btn btn-ghost btn-xs" onclick="PublisherModule._loadImageList('${slug}')" title="Refresh">↻</button>
+                    </div>
+                    <div id="imagePreviewArea" style="margin-top:8px"></div>
                 </div>
 
                 <!-- Text channels section -->
@@ -545,12 +577,12 @@ const PublisherModule = {
                         <strong>🎬 Video channels</strong> — attach a video to post as Reel/Short
                     </p>
                     <div style="margin-bottom:12px">
-                        <label class="form-label">Select Video Template</label>
+                        <label class="form-label">Select Video</label>
                         <div style="display:flex;gap:8px;align-items:center">
                             <select id="videoSelector" class="form-input" style="flex:1" onchange="PublisherModule._onVideoSelect()">
                                 <option value="">⏳ Loading videos...</option>
                             </select>
-                            <button class="btn btn-ghost btn-xs" onclick="PublisherModule._loadVideoList()" title="Refresh">↻</button>
+                            <button class="btn btn-ghost btn-xs" onclick="PublisherModule._loadVideoList('${slug}')" title="Refresh">↻</button>
                         </div>
                         <div id="videoPreviewArea" style="margin-top:8px"></div>
                     </div>
@@ -567,18 +599,27 @@ const PublisherModule = {
         `;
         document.body.appendChild(modal);
 
-        // Load video list from repo
-        this._loadVideoList();
+        // Load video + image lists (manifest-aware)
+        this._loadVideoList(slug);
+        this._loadImageList(slug);
     },
 
-    /* ─── Video picker helpers ─── */
-    async _loadVideoList() {
+    /* ─── Smart Video Picker (manifest + GitHub fallback) ─── */
+    async _loadVideoList(slug) {
         const select = document.getElementById('videoSelector');
         if (!select) return;
 
         select.innerHTML = '<option value="">⏳ Loading...</option>';
 
         try {
+            /* 1. Load manifest for auto-match */
+            let manifestVideo = null;
+            try {
+                const media = await ManifestModule.getArticleMedia(slug);
+                if (media?.videoFilename) manifestVideo = media.videoFilename;
+            } catch (e) { /* continue without manifest */ }
+
+            /* 2. Load actual videos from GitHub repo */
             const ghToken = API._getToken('github');
             const { owner, repo, branch } = CONFIG.github;
             const dir = CONFIG.video?.repoDir || 'videos';
@@ -591,19 +632,54 @@ const PublisherModule = {
             const files = await res.json();
 
             const videos = files
-                .filter(f => f.name.endsWith('.mp4') || f.name.endsWith('.mov') || f.name.endsWith('.webm'))
+                .filter(f => /\.(mp4|mov|webm)$/i.test(f.name))
                 .sort((a, b) => a.name.localeCompare(b.name));
 
-            select.innerHTML = `<option value="">— No video (save as Ideas) —</option>`;
-            videos.forEach(v => {
-                const sizeKb = v.size ? ` (${(v.size / 1024 / 1024).toFixed(1)}MB)` : '';
-                const opt = document.createElement('option');
-                opt.value = `${CONFIG.video?.baseUrl || CONFIG.siteUrl + '/videos'}/${v.name}`;
-                opt.textContent = `🎬 ${v.name}${sizeKb}`;
-                select.appendChild(opt);
-            });
+            /* 3. Group by manifest weeks if available */
+            let weeklyGroups = null;
+            try {
+                const weeks = await ManifestModule.getByWeek();
+                if (weeks.length > 0) weeklyGroups = weeks;
+            } catch (e) { /* flat list fallback */ }
 
-            if (videos.length === 0) {
+            select.innerHTML = `<option value="">— No video (save as Ideas) —</option>`;
+
+            /* Auto-match suggestion first */
+            if (manifestVideo) {
+                const matchedFile = videos.find(v => v.name === manifestVideo);
+                if (matchedFile) {
+                    const videoUrl = `${CONFIG.video?.baseUrl || CONFIG.siteUrl + '/videos'}/${matchedFile.name}`;
+                    const sizeStr = matchedFile.size ? ` (${(matchedFile.size / 1024 / 1024).toFixed(1)}MB)` : '';
+                    const opt = document.createElement('option');
+                    opt.value = videoUrl;
+                    opt.textContent = `⭐ ${matchedFile.name}${sizeStr} — manifest match`;
+                    opt.style.fontWeight = '600';
+                    select.appendChild(opt);
+
+                    // Auto-select it
+                    select.value = videoUrl;
+                    this._selectedVideoUrl = videoUrl;
+                    this._onVideoSelect();
+                }
+            }
+
+            /* All videos */
+            if (videos.length > 0) {
+                const group = document.createElement('optgroup');
+                group.label = `📁 All videos (${videos.length})`;
+                videos.forEach(v => {
+                    const videoUrl = `${CONFIG.video?.baseUrl || CONFIG.siteUrl + '/videos'}/${v.name}`;
+                    if (manifestVideo && v.name === manifestVideo) return; // skip duplicate
+                    const sizeStr = v.size ? ` (${(v.size / 1024 / 1024).toFixed(1)}MB)` : '';
+                    const opt = document.createElement('option');
+                    opt.value = videoUrl;
+                    opt.textContent = `🎬 ${v.name}${sizeStr}`;
+                    group.appendChild(opt);
+                });
+                select.appendChild(group);
+            }
+
+            if (videos.length === 0 && !manifestVideo) {
                 select.innerHTML = '<option value="">No videos in /videos/ folder</option>';
             }
         } catch (e) {
@@ -639,6 +715,104 @@ const PublisherModule = {
         }
     },
 
+    /* ─── Smart Image Picker (manifest + GitHub) ─── */
+    async _loadImageList(slug) {
+        const select = document.getElementById('imageSelector');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">⏳ Loading...</option>';
+
+        try {
+            /* 1. Check manifest for auto-match */
+            let manifestImage = null;
+            try {
+                const media = await ManifestModule.getArticleMedia(slug);
+                if (media?.imageFilename) manifestImage = media.imageFilename;
+            } catch (e) { /* continue */ }
+
+            /* 2. Load images from repo */
+            const ghToken = API._getToken('github');
+            const { owner, repo, branch } = CONFIG.github;
+            const dir = CONFIG.images?.repoDir || 'images/social';
+
+            let images = [];
+            try {
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${dir}?ref=${branch}`, {
+                    headers: ghToken ? { Authorization: `token ${ghToken}` } : {},
+                });
+                if (res.ok) {
+                    const files = await res.json();
+                    images = files.filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f.name))
+                        .sort((a, b) => a.name.localeCompare(b.name));
+                }
+            } catch (e) { /* folder may not exist yet */ }
+
+            select.innerHTML = `<option value="">— No image (text-only post) —</option>`;
+
+            /* Auto-match from manifest */
+            if (manifestImage) {
+                const matchedFile = images.find(i => i.name === manifestImage);
+                const imgUrl = `${CONFIG.images?.baseUrl || CONFIG.siteUrl + '/images/social'}/${manifestImage}`;
+                const opt = document.createElement('option');
+                opt.value = imgUrl;
+                opt.textContent = `⭐ ${manifestImage} — manifest match`;
+                opt.style.fontWeight = '600';
+                select.appendChild(opt);
+
+                // Auto-select
+                select.value = imgUrl;
+                this._selectedImageUrl = imgUrl;
+                this._onImageSelect();
+            }
+
+            /* All images */
+            if (images.length > 0) {
+                const group = document.createElement('optgroup');
+                group.label = `🖼 All images (${images.length})`;
+                images.forEach(img => {
+                    if (manifestImage && img.name === manifestImage) return;
+                    const imgUrl = `${CONFIG.images?.baseUrl || CONFIG.siteUrl + '/images/social'}/${img.name}`;
+                    const sizeStr = img.size ? ` (${(img.size / 1024).toFixed(0)}KB)` : '';
+                    const opt = document.createElement('option');
+                    opt.value = imgUrl;
+                    opt.textContent = `🖼 ${img.name}${sizeStr}`;
+                    group.appendChild(opt);
+                });
+                select.appendChild(group);
+            }
+
+            if (images.length === 0 && !manifestImage) {
+                select.innerHTML = `<option value="">No images in /images/social/ yet</option>`;
+            }
+        } catch (e) {
+            console.error('Image list error:', e);
+            select.innerHTML = '<option value="">Error loading images</option>';
+        }
+    },
+
+    _onImageSelect() {
+        const select = document.getElementById('imageSelector');
+        const preview = document.getElementById('imagePreviewArea');
+        const url = select?.value;
+        this._selectedImageUrl = url || null;
+
+        if (preview) {
+            if (url) {
+                const name = url.split('/').pop();
+                preview.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--blue-50,#eff6ff);border-radius:var(--radius);border:1px solid var(--blue-200,#bfdbfe)">
+                        <img src="${url}" style="width:48px;height:48px;object-fit:cover;border-radius:4px" onerror="this.style.display='none'">
+                        <div>
+                            <div style="font-size:12px;font-weight:600;color:var(--blue-700,#1d4ed8)">Image attached</div>
+                            <div style="font-size:11px;color:var(--blue-600,#2563eb)">${UI.esc(name)} — will attach to LinkedIn, X & Facebook posts</div>
+                        </div>
+                    </div>`;
+            } else {
+                preview.innerHTML = '';
+            }
+        }
+    },
+
     async _queueSocialCopies(slug) {
         const PROXY = 'https://uj-social-proxy.pages.dev/api/buffer/graphql';
         const tokenA = API._getToken('buffer_a');
@@ -647,6 +821,7 @@ const PublisherModule = {
         if (btn) { btn.disabled = true; btn.textContent = '⏳ Queuing...'; }
 
         const videoUrl = this._selectedVideoUrl;
+        const imageUrl = this._selectedImageUrl;
         const articleTitle = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
         /* Channel config from CONFIG */
@@ -683,7 +858,7 @@ const PublisherModule = {
 
         let queued = 0, videos = 0, ideas = 0, errors = 0;
 
-        /* ─── Queue text channels ─── */
+        /* ─── Queue text channels (with optional image) ─── */
         for (const [key, ch] of Object.entries(textChannels)) {
             const text = document.getElementById(`socialCopy_${key}`)?.value?.trim();
             if (!text || !ch.token) continue;
@@ -691,19 +866,26 @@ const PublisherModule = {
                 const metadata = {};
                 if (key === 'facebook') metadata.facebook = { type: 'post' };
 
+                const input = {
+                    channelId: ch.id,
+                    text,
+                    mode: 'addToQueue',
+                    schedulingType: 'automatic',
+                    ...(Object.keys(metadata).length ? { metadata } : {}),
+                };
+
+                /* Attach image if selected (LinkedIn, X, Facebook) */
+                if (imageUrl) {
+                    input.assets = [{ image: { url: imageUrl } }];
+                }
+
                 const res = await fetch(PROXY, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         token: ch.token,
                         query: createPost,
-                        variables: { input: {
-                            channelId: ch.id,
-                            text,
-                            mode: 'addToQueue',
-                            schedulingType: 'automatic',
-                            ...(Object.keys(metadata).length ? { metadata } : {}),
-                        }},
+                        variables: { input },
                     }),
                 });
                 const data = await res.json();
