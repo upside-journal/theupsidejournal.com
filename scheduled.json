@@ -1,16 +1,8 @@
 {
-  "lastUpdated": "2026-06-10T10:49:45Z",
+  "lastUpdated": "2026-06-11T06:06:27.189308+00:00",
   "publishTime": "07:00 BST",
   "cronAgent": "Viktor AI",
   "scheduled": [
-    {
-      "slug": "lagos-london-diaspora-vc",
-      "title": "Lagos to London: How Nigeria's Tech Diaspora Is Reshaping Global VC",
-      "series": "The Other Markets",
-      "author": "Olusegun Olufunmiloye",
-      "date": "2026-06-11",
-      "status": "scheduled"
-    },
     {
       "slug": "pre-cannes-deal-roundup",
       "title": "Pre-Cannes Deal Roundup: Who's Raising and Who's Spending",
@@ -85,7 +77,7 @@
     },
     {
       "slug": "cannes-day1-live-coverage",
-      "title": "Live Coverage: Beyond the Beach \u2014 Cannes Lions 2026 Day 1",
+      "title": "Live Coverage: Beyond the Beach — Cannes Lions 2026 Day 1",
       "series": "Cannes Lions 2026",
       "author": "Chaste Inegbedion",
       "date": "2026-06-22",
@@ -109,7 +101,7 @@
     },
     {
       "slug": "cannes-live-deals-rose",
-      "title": "CANNES LIVE: Who Signed Deals and Who Just Drank Ros\u00e9",
+      "title": "CANNES LIVE: Who Signed Deals and Who Just Drank Rosé",
       "series": "Deal Flow",
       "author": "Chaste Inegbedion",
       "date": "2026-06-25",
@@ -117,7 +109,7 @@
     },
     {
       "slug": "cannes-wrap-relationship-roi",
-      "title": "CANNES WRAP: Beyond the Beach \u2014 Why Cannes 2026 Is Failing at Relationship ROI",
+      "title": "CANNES WRAP: Beyond the Beach — Why Cannes 2026 Is Failing at Relationship ROI",
       "series": "The Operator",
       "author": "Chaste Inegbedion",
       "date": "2026-06-26",
@@ -159,7 +151,7 @@
     },
     {
       "slug": "creator-economy-enterprise-media",
-      "title": "The Creator Economy Is Eating Enterprise Media \u2014 Here Are the Numbers",
+      "title": "The Creator Economy Is Eating Enterprise Media — Here Are the Numbers",
       "series": "Market Signal",
       "author": "Olusegun Olufunmiloye",
       "date": "2026-06-09",
@@ -188,6 +180,15 @@
       "author": "Chaste Inegbedion",
       "date": "2026-06-10",
       "status": "published"
+    },
+    {
+      "slug": "lagos-london-diaspora-vc",
+      "title": "Lagos to London: How Nigeria's Tech Diaspora Is Reshaping Global VC",
+      "series": "The Other Markets",
+      "author": "Olusegun Olufunmiloye",
+      "date": "2026-06-11",
+      "status": "published",
+      "publishedDate": "2026-06-11"
     }
   ]
 }
