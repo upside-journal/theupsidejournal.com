@@ -352,10 +352,13 @@ const PublisherModule = {
     },
 
     _extractBody(html) {
-        // Prefer <article> content for cleaner editing (skip nav/header/footer)
+        // Prefer article-body div content only — preserves header/meta/cover structure
+        const bodyDivMatch = html.match(/<div\s+class="article-body"[^>]*>([\s\S]+)<\/div>\s*<\/div>\s*<\/article>/i);
+        if (bodyDivMatch) return bodyDivMatch[1].trim();
+        // Fallback: <article> content (for articles without article-body wrapper)
         const articleMatch = html.match(/<article[^>]*>([\s\S]*?)<\/article>/i);
         if (articleMatch) return articleMatch[1].trim();
-        // Fallback to full body
+        // Fallback: full body
         const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
         if (bodyMatch) return bodyMatch[1].trim();
         return html;
@@ -363,14 +366,21 @@ const PublisherModule = {
 
     _wrapBody(bodyHtml) {
         if (!this._editorContent) return bodyHtml;
-        // If original had <article>, splice edited content back into it
+        // If original had article-body div, splice content into it (preserves header/cover)
+        if (this._editorContent.match(/<div\s+class="article-body"[^>]*>/i)) {
+            return this._editorContent.replace(
+                /(<div\s+class="article-body"[^>]*>)([\s\S]+)(<\/div>\s*<\/div>\s*<\/article>)/i,
+                `$1\n${bodyHtml}\n$3`
+            );
+        }
+        // Fallback: <article> content
         if (this._editorContent.match(/<article[^>]*>/i)) {
             return this._editorContent.replace(
                 /(<article[^>]*>)([\s\S]*?)(<\/article>)/i,
                 `$1\n${bodyHtml}\n$3`
             );
         }
-        // Fallback to body replacement
+        // Fallback: body replacement
         if (this._editorContent.includes('<body')) {
             return this._editorContent.replace(
                 /(<body[^>]*>)([\s\S]*?)(<\/body>)/i,
