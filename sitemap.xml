@@ -610,4 +610,68 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- Agriarche: How Deina Mayaki Is Digitising Nigeria's Agricultural Markets -->
+  <url>
+    <loc>https://theupsidejournal.com/articles/agriarche-cannes-2026.html</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-12</news:publication_date>
+      <news:title>Agriarche: How Deina Mayaki Is Digitising Nigeria's Agricultural Markets</news:title>
+    </news:news>
+  </url>
+
+  <!-- Xara — How Sulaiman Adewale Turned WhatsApp Into a Bank -->
+  <url>
+    <loc>https://theupsidejournal.com/articles/xara-whatsapp-bank.html</loc>
+    <lastmod>2026-06-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-13</news:publication_date>
+      <news:title>Xara — How Sulaiman Adewale Turned WhatsApp Into a Bank</news:title>
+    </news:news>
+  </url>
+
+  <!-- Beyond Limits Global: Dr. Juliet Ehimuan at Cannes Lions 2026 -->
+  <url>
+    <loc>https://theupsidejournal.com/articles/beyond-limits-cannes-2026.html</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-15</news:publication_date>
+      <news:title>Beyond Limits Global: How Dr. Juliet Ehimuan Went from Google West Africa to Cannes Lions Innovation Jury</news:title>
+    </news:news>
+  </url>
+
+  <!-- ROK Studios: How Mary Njoku Built Nollywood's Biggest Production House -->
+  <url>
+    <loc>https://theupsidejournal.com/articles/rok-studios-cannes-2026.html</loc>
+    <lastmod>2026-06-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-16</news:publication_date>
+      <news:title>ROK Studios: How Mary Njoku Built Nollywood's Biggest Production House — and Earned a Seat on the Cannes Lions Jury</news:title>
+    </news:news>
+  </url>
 </urlset>
