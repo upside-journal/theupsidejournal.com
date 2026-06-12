@@ -500,11 +500,11 @@ const SocialModule = {
         try {
             const ghToken = API._getToken('github');
             const { owner, repo, branch } = CONFIG.github;
-            const dir = CONFIG.images?.repoDir || 'images/social';
 
+            /* Load from /images/ (article cover + incontent assets) */
             let images = [];
             try {
-                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${dir}?ref=${branch}`, {
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/images?ref=${branch}`, {
                     headers: ghToken ? { Authorization: `token ${ghToken}` } : {},
                 });
                 if (res.ok) {
@@ -514,17 +514,50 @@ const SocialModule = {
                 }
             } catch (e) { /* folder may not exist yet */ }
 
+            const baseUrl = CONFIG.siteUrl + '/images';
             select.innerHTML = '<option value="">— No image (text only) —</option>';
-            images.forEach(img => {
-                const sizeStr = img.size ? ` (${(img.size / 1024).toFixed(0)}KB)` : '';
-                const opt = document.createElement('option');
-                opt.value = `${CONFIG.images?.baseUrl || CONFIG.siteUrl + '/images/social'}/${img.name}`;
-                opt.textContent = `🖼 ${img.name}${sizeStr}`;
-                select.appendChild(opt);
-            });
+
+            /* Group: cover images first, then incontent, then others */
+            const covers = images.filter(i => /-cover\./i.test(i.name));
+            const incontent = images.filter(i => /-incontent\./i.test(i.name));
+            const others = images.filter(i => !/-cover\./i.test(i.name) && !/-incontent\./i.test(i.name));
+
+            if (covers.length > 0) {
+                const group = document.createElement('optgroup');
+                group.label = `📷 Cover images (${covers.length})`;
+                covers.forEach(img => {
+                    const opt = document.createElement('option');
+                    opt.value = `${baseUrl}/${img.name}`;
+                    opt.textContent = `📷 ${img.name}`;
+                    group.appendChild(opt);
+                });
+                select.appendChild(group);
+            }
+            if (incontent.length > 0) {
+                const group = document.createElement('optgroup');
+                group.label = `🖼 In-content images (${incontent.length})`;
+                incontent.forEach(img => {
+                    const opt = document.createElement('option');
+                    opt.value = `${baseUrl}/${img.name}`;
+                    opt.textContent = `🖼 ${img.name}`;
+                    group.appendChild(opt);
+                });
+                select.appendChild(group);
+            }
+            if (others.length > 0) {
+                const group = document.createElement('optgroup');
+                group.label = `📁 Other images (${others.length})`;
+                others.forEach(img => {
+                    const opt = document.createElement('option');
+                    opt.value = `${baseUrl}/${img.name}`;
+                    opt.textContent = `📁 ${img.name}`;
+                    group.appendChild(opt);
+                });
+                select.appendChild(group);
+            }
 
             if (images.length === 0) {
-                select.innerHTML = '<option value="">No images in /images/social/ yet</option>';
+                select.innerHTML = '<option value="">No images found in /images/</option>';
             }
         } catch (e) {
             console.error('Image list error:', e);
@@ -757,12 +790,17 @@ const SocialModule = {
 
         const mutation = `mutation($input: CreatePostInput!) {
             createPost(input: $input) {
+                __typename
                 ... on PostActionSuccess { post { id status dueAt } }
                 ... on InvalidInputError { message }
                 ... on UnexpectedError { message }
                 ... on LimitReachedError { message }
+                ... on RestProxyError { message }
+                ... on NotFoundError { message }
             }
         }`;
+
+        const errorDetails = [];
 
         for (const input of selected) {
             const channelId = input.value;
@@ -778,11 +816,13 @@ const SocialModule = {
                 if (post?.post?.id) {
                     success++;
                 } else {
-                    const msg = post?.message || 'Unknown error';
-                    console.error(`Post failed for ${service}:`, msg);
+                    const msg = post?.message || `Unknown error (type: ${post?.__typename || '?'})`;
+                    errorDetails.push(`${service}: ${msg}`);
+                    console.error(`Post failed for ${service}:`, msg, result);
                     failed++;
                 }
             } catch (e) {
+                errorDetails.push(`${service}: ${e.message}`);
                 console.error(`Post error for ${service}:`, e);
                 failed++;
             }
@@ -807,7 +847,8 @@ const SocialModule = {
             if (imgSt) imgSt.innerHTML = '';
             await this._loadPosts();
         } else {
-            UI.toast(`Failed to create posts: ${failed} error${failed > 1 ? 's' : ''}`, 'error');
+            const detail = errorDetails.length > 0 ? ' → ' + errorDetails.slice(0, 2).join(' | ') : '';
+            UI.toast(`Failed to create posts: ${failed} error${failed > 1 ? 's' : ''}${detail}`, 'error', 8000);
         }
     },
 
@@ -820,9 +861,12 @@ const SocialModule = {
 
         const mutation = `mutation($input: CreatePostInput!) {
             createPost(input: $input) {
+                __typename
                 ... on PostActionSuccess { post { id status } }
                 ... on InvalidInputError { message }
                 ... on UnexpectedError { message }
+                ... on RestProxyError { message }
+                ... on NotFoundError { message }
             }
         }`;
 

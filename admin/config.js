@@ -87,10 +87,10 @@ const CONFIG = {
         driveFolderId: '1mMaqnM2-cKSQilS-GLccq_T7hJEiDR-m',
     },
 
-    // Social images
+    // Social images (article cover + incontent assets in /images/)
     images: {
-        repoDir: 'images/social',
-        baseUrl: 'https://theupsidejournal.com/images/social',
+        repoDir: 'images',
+        baseUrl: 'https://theupsidejournal.com/images',
     },
 
     // Cron schedule
