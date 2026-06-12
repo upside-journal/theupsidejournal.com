@@ -1,263 +1,244 @@
 {
-  "generated": "2026-06-11T08:19:42.456982+00:00",
+  "generated": "2026-06-12T05:03:49.768305+00:00",
   "period": {
     "ga4": {
-      "start": "2026-05-12",
-      "end": "2026-06-10",
-      "days": 30
+      "start": "2026-05-13",
+      "end": "2026-06-11"
+    },
+    "ga4_previousPeriod": {
+      "start": "2026-04-13",
+      "end": "2026-05-12"
     },
     "gsc": {
-      "start": "2026-05-14",
-      "end": "2026-06-10",
-      "days": 28
+      "start": "2026-05-15",
+      "end": "2026-06-11"
     }
   },
   "ga4": {
     "summary": {
-      "totalSessions": 235,
-      "totalUsers": 164,
-      "totalPageviews": 325,
-      "avgSessionDuration": 127.01,
-      "avgBounceRate": 0.6895,
-      "dataStartDate": "2026-06-01",
-      "dataEndDate": "2026-06-10",
-      "daysWithData": 10,
-      "note": "GA4 data only recorded from 2026-06-01 (site launched recently). No data for May 12-31."
+      "sessions": 248,
+      "totalUsers": 175,
+      "pageviews": 342,
+      "avgSessionDurationSec": 136.0,
+      "avgBounceRatePct": 69.9
+    },
+    "previousPeriod": {
+      "sessions": 0,
+      "totalUsers": 0,
+      "pageviews": 0,
+      "avgSessionDurationSec": 0,
+      "avgBounceRatePct": 0
     },
     "daily": [
       {
-        "date": "2026-06-01",
-        "sessions": 7,
-        "totalUsers": 7,
-        "screenPageViews": 7,
-        "avgSessionDuration": 1.93,
-        "bounceRate": 1.0
+        "date": "20260602",
+        "sessions": "42",
+        "totalUsers": "30",
+        "screenPageViews": "69",
+        "averageSessionDuration": "214.33099209523812",
+        "bounceRate": "0.66666666666666663"
       },
       {
-        "date": "2026-06-02",
-        "sessions": 42,
-        "totalUsers": 30,
-        "screenPageViews": 69,
-        "avgSessionDuration": 214.33,
-        "bounceRate": 0.667
+        "date": "20260603",
+        "sessions": "35",
+        "totalUsers": "27",
+        "screenPageViews": "41",
+        "averageSessionDuration": "72.4662057142857",
+        "bounceRate": "0.62857142857142856"
       },
       {
-        "date": "2026-06-03",
-        "sessions": 35,
-        "totalUsers": 27,
-        "screenPageViews": 41,
-        "avgSessionDuration": 72.47,
-        "bounceRate": 0.629
+        "date": "20260605",
+        "sessions": "33",
+        "totalUsers": "25",
+        "screenPageViews": "47",
+        "averageSessionDuration": "10.915916969696969",
+        "bounceRate": "0.63636363636363635"
       },
       {
-        "date": "2026-06-04",
-        "sessions": 22,
-        "totalUsers": 13,
-        "screenPageViews": 25,
-        "avgSessionDuration": 122.15,
-        "bounceRate": 0.682
+        "date": "20260609",
+        "sessions": "32",
+        "totalUsers": "21",
+        "screenPageViews": "48",
+        "averageSessionDuration": "79.06788378125",
+        "bounceRate": "0.625"
       },
       {
-        "date": "2026-06-05",
-        "sessions": 33,
-        "totalUsers": 25,
-        "screenPageViews": 47,
-        "avgSessionDuration": 10.92,
-        "bounceRate": 0.636
+        "date": "20260608",
+        "sessions": "23",
+        "totalUsers": "16",
+        "screenPageViews": "27",
+        "averageSessionDuration": "49.003774652173917",
+        "bounceRate": "0.69565217391304346"
       },
       {
-        "date": "2026-06-06",
-        "sessions": 13,
-        "totalUsers": 10,
-        "screenPageViews": 17,
-        "avgSessionDuration": 17.2,
-        "bounceRate": 0.615
+        "date": "20260604",
+        "sessions": "22",
+        "totalUsers": "13",
+        "screenPageViews": "25",
+        "averageSessionDuration": "122.14850295454545",
+        "bounceRate": "0.68181818181818177"
       },
       {
-        "date": "2026-06-07",
-        "sessions": 11,
-        "totalUsers": 6,
-        "screenPageViews": 14,
-        "avgSessionDuration": 130.66,
-        "bounceRate": 0.727
+        "date": "20260610",
+        "sessions": "17",
+        "totalUsers": "9",
+        "screenPageViews": "29",
+        "averageSessionDuration": "420.44215805882351",
+        "bounceRate": "0.41176470588235292"
       },
       {
-        "date": "2026-06-08",
-        "sessions": 23,
-        "totalUsers": 16,
-        "screenPageViews": 27,
-        "avgSessionDuration": 49.0,
-        "bounceRate": 0.696
+        "date": "20260606",
+        "sessions": "13",
+        "totalUsers": "10",
+        "screenPageViews": "17",
+        "averageSessionDuration": "17.201672461538461",
+        "bounceRate": "0.61538461538461542"
       },
       {
-        "date": "2026-06-09",
-        "sessions": 32,
-        "totalUsers": 21,
-        "screenPageViews": 48,
-        "avgSessionDuration": 79.07,
-        "bounceRate": 0.625
+        "date": "20260611",
+        "sessions": "13",
+        "totalUsers": "11",
+        "screenPageViews": "18",
+        "averageSessionDuration": "377.95726315384616",
+        "bounceRate": "1"
       },
       {
-        "date": "2026-06-10",
-        "sessions": 17,
-        "totalUsers": 9,
-        "screenPageViews": 30,
-        "avgSessionDuration": 584.14,
-        "bounceRate": 1.0
+        "date": "20260607",
+        "sessions": "11",
+        "totalUsers": "6",
+        "screenPageViews": "14",
+        "averageSessionDuration": "130.658865",
+        "bounceRate": "0.72727272727272729"
+      },
+      {
+        "date": "20260601",
+        "sessions": "7",
+        "totalUsers": "7",
+        "screenPageViews": "7",
+        "averageSessionDuration": "1.9267554285714286",
+        "bounceRate": "1"
       }
     ],
     "topPages": [
       {
         "pagePath": "/",
-        "pageviews": 146,
-        "sessions": 118
+        "screenPageViews": "153",
+        "sessions": "124",
+        "totalUsers": "68"
       },
       {
         "pagePath": "/articles/cannes-lions-women-taking-stage.html",
-        "pageviews": 42,
-        "sessions": 39
+        "screenPageViews": "43",
+        "sessions": "40",
+        "totalUsers": "24"
       },
       {
         "pagePath": "/articles/cannes-3b-networking-failure.html",
-        "pageviews": 22,
-        "sessions": 25
+        "screenPageViews": "22",
+        "sessions": "25",
+        "totalUsers": "17"
       },
       {
         "pagePath": "/about",
-        "pageviews": 13,
-        "sessions": 19
+        "screenPageViews": "14",
+        "sessions": "19",
+        "totalUsers": "8"
       },
       {
         "pagePath": "/about.html",
-        "pageviews": 12,
-        "sessions": 12
+        "screenPageViews": "12",
+        "sessions": "12",
+        "totalUsers": "9"
       },
       {
         "pagePath": "/articles/un-turns-81-internet-explorer.html",
-        "pageviews": 12,
-        "sessions": 9
+        "screenPageViews": "12",
+        "sessions": "10",
+        "totalUsers": "6"
       },
       {
         "pagePath": "/articles/africa-hidden-unicorns.html",
-        "pageviews": 11,
-        "sessions": 11
+        "screenPageViews": "11",
+        "sessions": "11",
+        "totalUsers": "7"
       },
       {
         "pagePath": "/articles/woof-studios-africa-cannes-2026.html",
-        "pageviews": 11,
-        "sessions": 9
+        "screenPageViews": "11",
+        "sessions": "9",
+        "totalUsers": "6"
       },
       {
         "pagePath": "/articles/cannes-un-reform-reality-gap.html",
-        "pageviews": 10,
-        "sessions": 10
+        "screenPageViews": "10",
+        "sessions": "10",
+        "totalUsers": "10"
       },
       {
         "pagePath": "/articles/saas-churn-metric.html",
-        "pageviews": 9,
-        "sessions": 8
+        "screenPageViews": "9",
+        "sessions": "8",
+        "totalUsers": "6"
       }
     ],
     "topSources": [
       {
-        "source": "(direct)",
-        "sessions": 196,
-        "users": 104
+        "sessionSource": "(direct)",
+        "sessions": "207",
+        "totalUsers": "110"
       },
       {
-        "source": "linkedin.com",
-        "sessions": 18,
-        "users": 14
+        "sessionSource": "linkedin.com",
+        "sessions": "18",
+        "totalUsers": "14"
       },
       {
-        "source": "(not set)",
-        "sessions": 8,
-        "users": 5
+        "sessionSource": "facebook.com",
+        "sessions": "10",
+        "totalUsers": "10"
       },
       {
-        "source": "facebook.com",
-        "sessions": 8,
-        "users": 8
+        "sessionSource": "m.facebook.com",
+        "sessions": "7",
+        "totalUsers": "7"
       },
       {
-        "source": "m.facebook.com",
-        "sessions": 7,
-        "users": 7
+        "sessionSource": "(not set)",
+        "sessions": "5",
+        "totalUsers": "5"
       },
       {
-        "source": "t.co",
-        "sessions": 2,
-        "users": 2
+        "sessionSource": "t.co",
+        "sessions": "2",
+        "totalUsers": "2"
+      },
+      {
+        "sessionSource": "bing",
+        "sessions": "1",
+        "totalUsers": "1"
+      },
+      {
+        "sessionSource": "youtube.com",
+        "sessions": "1",
+        "totalUsers": "1"
       }
     ]
   },
   "gsc": {
     "summary": {
-      "totalClicks": 0,
-      "totalImpressions": 2,
-      "avgCtr": 0.0,
-      "avgPosition": 3.5,
-      "note": "Site is new \u2014 very limited search data. Only 2 impressions recorded."
+      "clicks": 0,
+      "impressions": 0,
+      "avgPosition": 0.0,
+      "rowCount": 0
     },
     "topQueries": [],
     "topPages": [
       {
-        "page": "https://theupsidejournal.com/",
         "clicks": 0,
         "impressions": 2,
-        "ctr": 0.0,
-        "position": 3.5
-      }
-    ],
-    "daily": [
-      {
-        "date": "2026-06-02",
-        "clicks": 0,
-        "impressions": 0,
-        "ctr": 0.0,
-        "position": 0
-      },
-      {
-        "date": "2026-06-03",
-        "clicks": 0,
-        "impressions": 0,
-        "ctr": 0.0,
-        "position": 0
-      },
-      {
-        "date": "2026-06-04",
-        "clicks": 0,
-        "impressions": 0,
-        "ctr": 0.0,
-        "position": 0
-      },
-      {
-        "date": "2026-06-05",
-        "clicks": 0,
-        "impressions": 0,
-        "ctr": 0.0,
-        "position": 0
-      },
-      {
-        "date": "2026-06-06",
-        "clicks": 0,
-        "impressions": 1,
-        "ctr": 0.0,
-        "position": 6.0
-      },
-      {
-        "date": "2026-06-07",
-        "clicks": 0,
-        "impressions": 0,
-        "ctr": 0.0,
-        "position": 0
-      },
-      {
-        "date": "2026-06-08",
-        "clicks": 0,
-        "impressions": 1,
-        "ctr": 0.0,
-        "position": 1.0
+        "ctr": 0,
+        "position": 3.5,
+        "key": "https://theupsidejournal.com/"
       }
     ]
   }
