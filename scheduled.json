@@ -1,16 +1,8 @@
 {
-  "lastUpdated": "2026-06-11T06:06:27.189308+00:00",
+  "lastUpdated": "2026-06-12T06:02:14.172201+00:00",
   "publishTime": "07:00 BST",
   "cronAgent": "Viktor AI",
   "scheduled": [
-    {
-      "slug": "pre-cannes-deal-roundup",
-      "title": "Pre-Cannes Deal Roundup: Who's Raising and Who's Spending",
-      "series": "Deal Flow",
-      "author": "Chaste Inegbedion",
-      "date": "2026-06-12",
-      "status": "scheduled"
-    },
     {
       "slug": "esg-rebrand-impact-investing",
       "title": "ESG Is Dead. Long Live ESG. Why Impact Investing Needs a Rebrand",
@@ -189,6 +181,15 @@
       "date": "2026-06-11",
       "status": "published",
       "publishedDate": "2026-06-11"
+    },
+    {
+      "slug": "pre-cannes-deal-roundup",
+      "title": "Pre-Cannes Deal Roundup: Who's Raising and Who's Spending",
+      "series": "Deal Flow",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-12",
+      "status": "published",
+      "publishedDate": "2026-06-12"
     }
   ]
 }
