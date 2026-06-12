@@ -366,25 +366,26 @@ const PublisherModule = {
 
     _wrapBody(bodyHtml) {
         if (!this._editorContent) return bodyHtml;
+        // Use function replacer (not string) to avoid $ in content being treated as regex backreferences
         // If original had article-body div, splice content into it (preserves header/cover)
         if (this._editorContent.match(/<div\s+class="article-body"[^>]*>/i)) {
             return this._editorContent.replace(
                 /(<div\s+class="article-body"[^>]*>)([\s\S]+)(<\/div>\s*<\/div>\s*<\/article>)/i,
-                `$1\n${bodyHtml}\n$3`
+                (match, open, oldBody, close) => `${open}\n${bodyHtml}\n${close}`
             );
         }
         // Fallback: <article> content
         if (this._editorContent.match(/<article[^>]*>/i)) {
             return this._editorContent.replace(
                 /(<article[^>]*>)([\s\S]*?)(<\/article>)/i,
-                `$1\n${bodyHtml}\n$3`
+                (match, open, oldBody, close) => `${open}\n${bodyHtml}\n${close}`
             );
         }
         // Fallback: body replacement
         if (this._editorContent.includes('<body')) {
             return this._editorContent.replace(
                 /(<body[^>]*>)([\s\S]*?)(<\/body>)/i,
-                `$1\n${bodyHtml}\n$3`
+                (match, open, oldBody, close) => `${open}\n${bodyHtml}\n${close}`
             );
         }
         return bodyHtml;
