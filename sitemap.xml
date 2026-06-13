@@ -686,4 +686,18 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://theupsidejournal.com/articles/invisible-tech-world-cup.html</loc>
+    <lastmod>2026-06-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <news:news>
+      <news:publication>
+        <news:name>Upside Journal</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2026-06-13</news:publication_date>
+      <news:title>The Invisible Tech Running the 2026 World Cup: How AI Is Changing Football</news:title>
+    </news:news>
+  </url>
 </urlset>
