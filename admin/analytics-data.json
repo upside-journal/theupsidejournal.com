@@ -1,26 +1,26 @@
 {
-  "generated": "2026-06-12T05:03:49.768305+00:00",
+  "generated": "2026-06-13T05:02:06.609314+00:00",
   "period": {
     "ga4": {
-      "start": "2026-05-13",
-      "end": "2026-06-11"
+      "start": "2026-05-14",
+      "end": "2026-06-12"
     },
-    "ga4_previousPeriod": {
-      "start": "2026-04-13",
-      "end": "2026-05-12"
+    "ga4Prev": {
+      "start": "2026-04-14",
+      "end": "2026-05-13"
     },
     "gsc": {
-      "start": "2026-05-15",
-      "end": "2026-06-11"
+      "start": "2026-05-16",
+      "end": "2026-06-12"
     }
   },
   "ga4": {
     "summary": {
-      "sessions": 248,
-      "totalUsers": 175,
-      "pageviews": 342,
-      "avgSessionDurationSec": 136.0,
-      "avgBounceRatePct": 69.9
+      "sessions": 309,
+      "totalUsers": 224,
+      "pageviews": 427,
+      "avgSessionDurationSec": 125.1,
+      "avgBounceRatePct": 68.8
     },
     "previousPeriod": {
       "sessions": 0,
@@ -30,6 +30,14 @@
       "avgBounceRatePct": 0
     },
     "daily": [
+      {
+        "date": "20260612",
+        "sessions": "58",
+        "totalUsers": "47",
+        "screenPageViews": "81",
+        "averageSessionDuration": "215.38224665517242",
+        "bounceRate": "1"
+      },
       {
         "date": "20260602",
         "sessions": "42",
@@ -87,20 +95,20 @@
         "bounceRate": "0.41176470588235292"
       },
       {
+        "date": "20260611",
+        "sessions": "16",
+        "totalUsers": "13",
+        "screenPageViews": "22",
+        "averageSessionDuration": "168.216747375",
+        "bounceRate": "0.5625"
+      },
+      {
         "date": "20260606",
         "sessions": "13",
         "totalUsers": "10",
         "screenPageViews": "17",
         "averageSessionDuration": "17.201672461538461",
         "bounceRate": "0.61538461538461542"
-      },
-      {
-        "date": "20260611",
-        "sessions": "13",
-        "totalUsers": "11",
-        "screenPageViews": "18",
-        "averageSessionDuration": "377.95726315384616",
-        "bounceRate": "1"
       },
       {
         "date": "20260607",
@@ -122,15 +130,21 @@
     "topPages": [
       {
         "pagePath": "/",
-        "screenPageViews": "153",
-        "sessions": "124",
-        "totalUsers": "68"
+        "screenPageViews": "178",
+        "sessions": "148",
+        "totalUsers": "81"
       },
       {
         "pagePath": "/articles/cannes-lions-women-taking-stage.html",
-        "screenPageViews": "43",
-        "sessions": "40",
-        "totalUsers": "24"
+        "screenPageViews": "46",
+        "sessions": "43",
+        "totalUsers": "26"
+      },
+      {
+        "pagePath": "/articles/pre-cannes-deal-roundup.html",
+        "screenPageViews": "23",
+        "sessions": "19",
+        "totalUsers": "17"
       },
       {
         "pagePath": "/articles/cannes-3b-networking-failure.html",
@@ -139,16 +153,28 @@
         "totalUsers": "17"
       },
       {
+        "pagePath": "/articles/agriarche-cannes-2026.html",
+        "screenPageViews": "16",
+        "sessions": "9",
+        "totalUsers": "6"
+      },
+      {
         "pagePath": "/about",
-        "screenPageViews": "14",
-        "sessions": "19",
+        "screenPageViews": "15",
+        "sessions": "22",
         "totalUsers": "8"
       },
       {
         "pagePath": "/about.html",
+        "screenPageViews": "13",
+        "sessions": "14",
+        "totalUsers": "11"
+      },
+      {
+        "pagePath": "/articles/cannes-un-reform-reality-gap.html",
         "screenPageViews": "12",
-        "sessions": "12",
-        "totalUsers": "9"
+        "sessions": "13",
+        "totalUsers": "13"
       },
       {
         "pagePath": "/articles/un-turns-81-internet-explorer.html",
@@ -161,51 +187,33 @@
         "screenPageViews": "11",
         "sessions": "11",
         "totalUsers": "7"
-      },
-      {
-        "pagePath": "/articles/woof-studios-africa-cannes-2026.html",
-        "screenPageViews": "11",
-        "sessions": "9",
-        "totalUsers": "6"
-      },
-      {
-        "pagePath": "/articles/cannes-un-reform-reality-gap.html",
-        "screenPageViews": "10",
-        "sessions": "10",
-        "totalUsers": "10"
-      },
-      {
-        "pagePath": "/articles/saas-churn-metric.html",
-        "screenPageViews": "9",
-        "sessions": "8",
-        "totalUsers": "6"
       }
     ],
     "topSources": [
       {
         "sessionSource": "(direct)",
-        "sessions": "207",
-        "totalUsers": "110"
+        "sessions": "247",
+        "totalUsers": "134"
       },
       {
         "sessionSource": "linkedin.com",
-        "sessions": "18",
-        "totalUsers": "14"
-      },
-      {
-        "sessionSource": "facebook.com",
-        "sessions": "10",
-        "totalUsers": "10"
+        "sessions": "19",
+        "totalUsers": "15"
       },
       {
         "sessionSource": "m.facebook.com",
-        "sessions": "7",
-        "totalUsers": "7"
+        "sessions": "17",
+        "totalUsers": "17"
       },
       {
         "sessionSource": "(not set)",
-        "sessions": "5",
-        "totalUsers": "5"
+        "sessions": "16",
+        "totalUsers": "13"
+      },
+      {
+        "sessionSource": "facebook.com",
+        "sessions": "16",
+        "totalUsers": "16"
       },
       {
         "sessionSource": "t.co",
@@ -213,12 +221,12 @@
         "totalUsers": "2"
       },
       {
-        "sessionSource": "bing",
-        "sessions": "1",
+        "sessionSource": "youtube.com",
+        "sessions": "2",
         "totalUsers": "1"
       },
       {
-        "sessionSource": "youtube.com",
+        "sessionSource": "bing",
         "sessions": "1",
         "totalUsers": "1"
       }
@@ -228,17 +236,17 @@
     "summary": {
       "clicks": 0,
       "impressions": 0,
-      "avgPosition": 0.0,
-      "rowCount": 0
+      "avgPosition": 0,
+      "dataPoints": 0
     },
     "topQueries": [],
     "topPages": [
       {
+        "key": "https://theupsidejournal.com/",
         "clicks": 0,
-        "impressions": 2,
+        "impressions": 10,
         "ctr": 0,
-        "position": 3.5,
-        "key": "https://theupsidejournal.com/"
+        "position": 3.4
       }
     ]
   }
