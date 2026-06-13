@@ -1,16 +1,8 @@
 {
-  "lastUpdated": "2026-06-12T10:46:21.617384+00:00",
+  "lastUpdated": "2026-06-13T06:01:33.525671+00:00",
   "publishTime": "07:00 BST",
   "cronAgent": "Viktor AI",
   "scheduled": [
-    {
-      "slug": "xara-whatsapp-bank",
-      "title": "Xara \u2014 How Sulaiman Adewale Turned WhatsApp Into a Bank",
-      "series": "Nigerian Tech at Cannes Lions 2026",
-      "author": "Upside Journal Staff",
-      "date": "2026-06-13",
-      "status": "scheduled"
-    },
     {
       "slug": "beyond-limits-cannes-2026",
       "title": "Beyond Limits Global: How Dr. Juliet Ehimuan Went from Running Google West Africa to Judging Innovation at Cannes Lions",
@@ -21,18 +13,10 @@
     },
     {
       "slug": "rok-studios-cannes-2026",
-      "title": "ROK Studios: How Mary Njoku Built Nollywood's Biggest Production House \u2014 and Earned a Seat on the Cannes Lions Jury",
+      "title": "ROK Studios: How Mary Njoku Built Nollywood's Biggest Production House — and Earned a Seat on the Cannes Lions Jury",
       "series": "Nigerian Tech at Cannes Lions 2026",
       "author": "Upside Journal Staff",
       "date": "2026-06-16",
-      "status": "scheduled"
-    },
-    {
-      "slug": "esg-rebrand-impact-investing",
-      "title": "ESG Is Dead. Long Live ESG. Why Impact Investing Needs a Rebrand",
-      "series": "Contrarian",
-      "author": "Chaste Inegbedion",
-      "date": "2026-06-13",
       "status": "scheduled"
     },
     {
@@ -93,7 +77,7 @@
     },
     {
       "slug": "cannes-day1-live-coverage",
-      "title": "Live Coverage: Beyond the Beach \u2014 Cannes Lions 2026 Day 1",
+      "title": "Live Coverage: Beyond the Beach — Cannes Lions 2026 Day 1",
       "series": "Cannes Lions 2026",
       "author": "Chaste Inegbedion",
       "date": "2026-06-22",
@@ -117,7 +101,7 @@
     },
     {
       "slug": "cannes-live-deals-rose",
-      "title": "CANNES LIVE: Who Signed Deals and Who Just Drank Ros\u00e9",
+      "title": "CANNES LIVE: Who Signed Deals and Who Just Drank Rosé",
       "series": "Deal Flow",
       "author": "Chaste Inegbedion",
       "date": "2026-06-25",
@@ -125,7 +109,7 @@
     },
     {
       "slug": "cannes-wrap-relationship-roi",
-      "title": "CANNES WRAP: Beyond the Beach \u2014 Why Cannes 2026 Is Failing at Relationship ROI",
+      "title": "CANNES WRAP: Beyond the Beach — Why Cannes 2026 Is Failing at Relationship ROI",
       "series": "The Operator",
       "author": "Chaste Inegbedion",
       "date": "2026-06-26",
@@ -167,7 +151,7 @@
     },
     {
       "slug": "creator-economy-enterprise-media",
-      "title": "The Creator Economy Is Eating Enterprise Media \u2014 Here Are the Numbers",
+      "title": "The Creator Economy Is Eating Enterprise Media — Here Are the Numbers",
       "series": "Market Signal",
       "author": "Olusegun Olufunmiloye",
       "date": "2026-06-09",
@@ -223,6 +207,24 @@
       "date": "2026-06-12",
       "status": "published",
       "publishedDate": "2026-06-12"
+    },
+    {
+      "slug": "xara-whatsapp-bank",
+      "title": "Xara — How Sulaiman Adewale Turned WhatsApp Into a Bank",
+      "series": "Nigerian Tech at Cannes Lions 2026",
+      "author": "Upside Journal Staff",
+      "date": "2026-06-13",
+      "status": "published",
+      "publishedDate": "2026-06-13"
+    },
+    {
+      "slug": "esg-rebrand-impact-investing",
+      "title": "ESG Is Dead. Long Live ESG. Why Impact Investing Needs a Rebrand",
+      "series": "Contrarian",
+      "author": "Chaste Inegbedion",
+      "date": "2026-06-13",
+      "status": "published",
+      "publishedDate": "2026-06-13"
     }
   ]
 }
